@@ -25,7 +25,7 @@ export default async function Page({
     const {data: {session}} = await database.auth.getSession()
 
     const {
-        userName,
+        user_name: userName,
         name: userFullName,
         avatar_url: avatarUrl,
     } = post?.user as any
@@ -39,7 +39,7 @@ export default async function Page({
     const momentDate = moment(created_at)
     let typedAvatarUrl = avatarUrl as string
     return (
-        <section className="border-l border-r border-white/30 min-w-[600px] h-screen">
+        <section className="border-l border-r border-white/30 w-[600px] h-screen">
             <div
                 className="bg-transparent shadow-none px-6"
             >
@@ -55,7 +55,7 @@ export default async function Page({
                     </div>
                 </div>
                 <div className="gap-3 py-0 text-small text-white-400 mt-6">
-                    <p className="">
+                    <p className="break-all">
                         {content}
                     </p>
                 </div>

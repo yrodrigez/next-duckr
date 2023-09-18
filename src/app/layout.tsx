@@ -30,7 +30,7 @@ export default async function RootLayout({
 
     return (
         <html lang="en" className="dark ">
-        <body className={`${inter.className} min-h-full`}>
+        <body className={`${inter.className} min-h-full bg-black`}>
         <Providers session={session}>
             <div className="flex">
                 <header className="flex z-3 justify-end items-end grow">

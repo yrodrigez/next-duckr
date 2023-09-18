@@ -1,3 +1,4 @@
+'use client'
 import {useState} from "react";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 
@@ -28,8 +29,8 @@ export function FollowButton({
                                  currentUserId
                              }: {
     userToFollow: any,
-    follows: any[],
-    currentUserId: string
+    follows: any,
+    currentUserId: any
 
 }) {
 
@@ -37,7 +38,7 @@ export function FollowButton({
     const [isDisabled, setIsDisabled] = useState(false)
     const database = createClientComponentClient()
     const [isFollowing, setIsFollowing] = useState(
-        follows.some(x => x?.user_id === userToFollowId)
+        follows.some((x: any) => x?.user_id === userToFollowId)
     )
     const follow = async (e: any) => {
         e.stopPropagation()
