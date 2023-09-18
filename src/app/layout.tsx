@@ -36,10 +36,10 @@ export default async function RootLayout({
                 <header className="flex z-3 justify-end items-end grow">
                     <div className="fixed h-[100%] top-0">
                         {
-                            session && <div className="mt-auto flex flex-col justify-between h-[100%] p-6">
-                            <div>
+                            session && <div className="mt-auto flex flex-col justify-between h-[100%] py-6 px-3 w-[68px]">
+                            <div className="flex flex-col align-middle">
                               <Link href={'/'}>
-                                <IconHome2 size={40} color="white"/>
+                                <IconHome2 size={40} color="white" className="m-0"/>
                               </Link>
                             </div>
                             <AuthButtonServer/>
@@ -47,7 +47,7 @@ export default async function RootLayout({
                         }
                     </div>
                 </header>
-                <main className="flex flex-col items-start justify-between grow h-screen">
+                <main className="flex flex-col items-start justify-between grow h-screen ">
                     {children}
                 </main>
             </div>

@@ -69,7 +69,7 @@ export function PostCard({
             router.push(`/${post.user.user_name || post.user.name?.split(' ')[0]}/status/${post.id}`)
         }}>
             <Card
-                className="cursor-pointer max-w-[640px] min-w-[600px] bg-transparent shadow-none border-b border-t border-white/20 hover:bg-slate-100/10 "
+                className="cursor-pointer max-w-[600px] bg-transparent shadow-none border-b border-t border-white/20 hover:bg-slate-100/10 "
                 radius="none">
                 <DuckHeader post={post}/>
                 <CardFooter>

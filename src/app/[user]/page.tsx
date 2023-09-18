@@ -23,7 +23,7 @@ export default async function Page({
     const {data: {session}} = await database.auth.getSession()
 
     return (
-        <section className="border-l border-r border-white/30 w-[600px] h-screen">
+        <section className="border-l border-r border-white/30 max-w-[600px] w-screen h-screen">
             <div className="bg-transparent shadow-none">
                 <div className="">
                     <div className="h-[200px] bg-violet-600 w-[100%]">

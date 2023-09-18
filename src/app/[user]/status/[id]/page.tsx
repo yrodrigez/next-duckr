@@ -39,7 +39,7 @@ export default async function Page({
     const momentDate = moment(created_at)
     let typedAvatarUrl = avatarUrl as string
     return (
-        <section className="border-l border-r border-white/30 w-[600px] h-screen">
+        <section className="border-l border-r border-white/30 max-w-[600px] w-screen h-screen">
             <div
                 className="bg-transparent shadow-none px-6"
             >
