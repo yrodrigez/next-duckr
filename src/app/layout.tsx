@@ -55,6 +55,7 @@ export default async function RootLayout({
                             <Link href={'/'}>
                                 <IconHome2 size={40} color="white" className="m-0"/>
                             </Link>
+                            <AuthButtonServer/>
                         </div>
                     </div>
                 </main>

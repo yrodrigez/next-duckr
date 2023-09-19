@@ -92,7 +92,7 @@ export function FollowButton({
         onClick={follow}
         disabled={isDisabled}
     >
-        {isFollowing ? isHover ? 'Unfollow' : 'Following' : 'Follow'}
+        {isFollowing ? (isHover ? 'Unfollow' : 'Following') : 'Follow'}
     </button> : null
 
 }

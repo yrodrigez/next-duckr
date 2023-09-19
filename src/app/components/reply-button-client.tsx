@@ -121,7 +121,7 @@ export function Reply({
                                                 ref={textAreaRef}
                                                 onChange={e => setContent(e.target.value)}
                                                 name="content" rows={4}
-                                                className="p-2 w-full text-2xl bg-black placeholder-gray-500 resize-none"
+                                                className="p-2 w-full text-2xl bg-black placeholder-gray-500 resize-none text-white"
                                                 placeholder="Post your reply!"></textarea>
                                         </div>
                                     </ModalBody>

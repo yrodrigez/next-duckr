@@ -64,7 +64,7 @@ export function PostCard({
     const router = useRouter()
 
     return (
-        <div className="duck-card" onClick={(e) => {
+        <div className="duck-card w-screen max-w-[600px]" onClick={(e) => {
             e.preventDefault()
             router.push(`/${post.user.user_name || post.user.name?.split(' ')[0]}/status/${post.id}`)
         }}>
