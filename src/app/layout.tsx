@@ -6,7 +6,7 @@ import {createServerComponentClient} from '@supabase/auth-helpers-nextjs'
 import {cookies} from 'next/headers'
 import {Database} from './types/database'
 import {AuthButtonServer} from "@/app/components/auth-button-server";
-import {IconHome2} from "@tabler/icons-react";
+import {IconHome2, IconMessages} from "@tabler/icons-react";
 
 import Link from "next/link";
 
@@ -17,6 +17,22 @@ const inter = Inter({subsets: ['latin']})
 export const metadata: Metadata = {
     title: 'Duckr',
     description: 'Is finally duckr here?',
+}
+
+const UserPanel = () => {
+    return (
+        <>
+            <div className="flex md:flex-col align-middle gap-8">
+                <Link href={'/'}>
+                    <IconHome2 size={40} color="white" className="m-0"/>
+                </Link>
+                <Link href={'/chats'}>
+                    <IconMessages size={40} color="white" className="m-0"/>
+                </Link>
+            </div>
+            <AuthButtonServer/>
+        </>
+    )
 }
 
 export default async function RootLayout({
@@ -38,26 +54,21 @@ export default async function RootLayout({
                         {
                             session &&
                           <div className="mt-auto flex flex-col justify-between h-[100%] py-6 px-3 w-[68px]">
-                            <div className="flex flex-col align-middle">
-                              <Link href={'/'}>
-                                <IconHome2 size={40} color="white" className="m-0"/>
-                              </Link>
-                            </div>
-                            <AuthButtonServer/>
+                            <UserPanel/>
                           </div>
                         }
                     </div>
                 </header>
                 <main className="flex flex-col items-center md:items-start justify-between grow h-screen">
                     {children}
-                    <div className="md:hidden align-middle justify-center max-w-[600px] w-screen">
-                        <div className="fixed bottom-0 max-w-[600px] w-screen border-t border-l border-r border-white/30 flex justify-between items-center py-3 px-6 bg-black z-10">
-                            <Link href={'/'}>
-                                <IconHome2 size={40} color="white" className="m-0"/>
-                            </Link>
-                            <AuthButtonServer/>
+                    {
+                        session && <div className="md:hidden align-middle justify-center max-w-[600px] w-screen">
+                        <div
+                          className="fixed bottom-0 max-w-[600px] w-screen border-t border-l border-r border-white/30 flex justify-between items-center py-3 px-6 bg-black z-10">
+                          <UserPanel/>
                         </div>
-                    </div>
+                      </div>
+                    }
                 </main>
             </div>
         </Providers>

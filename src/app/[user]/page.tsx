@@ -30,6 +30,7 @@ export default async function Page({
     return (
         <section className="border-l border-r border-white/30 max-w-[600px] w-screen h-fit">
             <div className="h-[200px] bg-violet-600 w-[100%]">
+                {/*Change here to put user's banner*/}
             </div>
             <div className="px-6 pt-3 w-[100%] flex justify-between">
                 <div className="overflow-visible pb-2 -mt-[15%]">
@@ -58,7 +59,10 @@ export default async function Page({
                     {
                         label: 'Posts',
                         name: 'posts',
-                        children: <PostsList posts={posts}/>
+                        children: (
+                                    <PostsList posts={posts}/>
+
+                        )
                     },
                     {
                         label: 'Replies',
