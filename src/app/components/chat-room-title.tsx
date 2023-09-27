@@ -26,7 +26,7 @@ function formatUserList(users: any[]) {
         const remaining = users.length - 3;
         output += ` and ${remaining} others`;
     }
-    console.log(output.length)
+
     return output.length > 38 ? output.substring(0, 38) + "..." : output;
 }
 

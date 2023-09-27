@@ -6,6 +6,7 @@ import {ChatRoomTitle} from "@/app/components/chat-room-title";
 import {ChatMessages} from "@/app/components/chat-messages-client";
 import {type Database} from "@/app/types/database";
 import {ChatMessageSend} from "@/app/components/send-chat-message-client";
+import {revalidatePath} from "next/cache";
 
 async function sendMessage(message?: string, roomId?: string) {
     'use server'
@@ -18,7 +19,7 @@ async function sendMessage(message?: string, roomId?: string) {
         user_id: user.id,
         room_id: roomId
     }
-    await database.from('chat_messages').insert(payload)
+   return database.from('chat_messages').insert(payload)
 }
 
 export default async function Page({
@@ -52,16 +53,16 @@ export default async function Page({
                 members={members?.map(({users: user}) => user)}
                 roomName={members?.[0]?.room?.name || 'Chat'}
             />
-            <div className="flex flex-col gap-3 p-5 overflow-auto flex-grow-2">
-                <ChatMessages currentUserId={currentUserId} messages={messages}/>
-            </div>
-            <div>
+            <ChatMessages currentUserId={currentUserId} messages={messages}/>
+            <div className="mb-9 md:mb-0">
                 <form action={async (formData: FormData) => {
                     'use server'
                     const message = formData.get('message')?.toString()
-                    await sendMessage(message, params.room_id)
+                    const data = await sendMessage(message, params.room_id)
+                    console.log(data)
+                    revalidatePath(`/chats/${params.room_id}`)
                 }} className="flex gap-2 p-3">
-                    <ChatMessageSend />
+                    <ChatMessageSend/>
                 </form>
             </div>
         </Section>

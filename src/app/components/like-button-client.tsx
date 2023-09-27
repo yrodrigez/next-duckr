@@ -36,7 +36,6 @@ export function LikeButton({
     const {
         id: postId,
     } = post
-    const isReply = !!postId
     const [likes, setLikes] = useState(post?.likes || [])
     const database = createClientComponentClient()
     const {sessionContext} = useContext(SessionContext) as any
@@ -71,7 +70,8 @@ export function LikeButton({
                 postId,
                 userId,
                 database: database
-            }).then(({error}) => {
+            }).then((data) => {
+                const {error} =data
                 if (error) return
                 const newPost = {
                     ...post,
