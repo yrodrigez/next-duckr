@@ -55,7 +55,7 @@ export default async function Page({
                 roomName={members?.[0]?.room?.name || 'Chat'}
             />
             <ChatMessages currentUserId={currentUserId} messages={messages}/>
-            <div className="mb-9 lg:mb-0">
+            <div className="mb-16 md:mb-0">
                 <form action={async (formData: FormData) => {
                     'use server'
                     const message = formData.get('message')?.toString()
