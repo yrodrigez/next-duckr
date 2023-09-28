@@ -1,11 +1,78 @@
 'use client'
 
-import {IconMessagePlus, IconCheck} from "@tabler/icons-react";
+import {IconMessagePlus, IconCheck, IconLoader2} from "@tabler/icons-react";
 import {useContext, useEffect, useState} from "react";
 import {SessionContext} from "@/app/providers";
 import {Card, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {useRouter} from "next/navigation";
+
+function chatRoomExists(database: any, user: any, selection: any) {
+    return new Promise((done, error) => {
+        database.from('chat_room_members_view')
+            .select('room_id, members:member_ids')
+            .then(({
+                       data,
+                       error: err
+                   }: any) => {
+                if (err) return error(err)
+                if (!data?.length) done({data: []})
+                const rooms = data.filter((room: any) => {
+                    if (!room.members) return false
+
+                    return room.members.every((member: any) => {
+                        return [user?.id, ...selection].includes(member)
+                    })
+                })
+                done({data: rooms})
+            })
+    })
+}
+
+function createChatRoom(database: any, user: any, selection: any) {
+    return new Promise((done, error) => {
+        database.from('chat_rooms').insert({
+            owner_id: user.id,
+        }).select().then(({
+                              error: err,
+                              data: rooms
+                          }: any) => {
+            if (err) return error(err)
+            debugger
+            database.from('chat_room_members')
+                .insert([user?.id, ...selection].map((userId: any) => ({
+                        user_id: userId,
+                        room_id: rooms[0].id
+                    })
+                )).select().then(({
+                                      data,
+                                      err
+                                  }: any) => {
+                debugger
+                if (err) return error(err)
+                done({data})
+            })
+        })
+    })
+}
+
+function handleChatRoomSelection(database: any, user: any, selection: any) {
+    return new Promise((done, error) => {
+        chatRoomExists(database, user, selection).then(({data}: any) => {
+            if (data?.length) {
+                done(`/chats/${data[0].room_id}`)
+            } else {
+                createChatRoom(database, user, selection).then(({data}: any) => {
+                    done(`/chats/${data[0].room_id}`)
+                }).catch((err: any) => {
+                    error(err)
+                })
+            }
+        }).catch((err: any) => {
+            error(err)
+        })
+    })
+}
 
 const ChatUsersView = () => {
     const sessionContext = useContext(SessionContext) as any
@@ -14,6 +81,7 @@ const ChatUsersView = () => {
     const [users, setUsers] = useState([] as any[])
     const [selection, setSelection] = useState([] as any[])
     const router = useRouter()
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         database.from('users').select('*').filter(
@@ -52,29 +120,13 @@ const ChatUsersView = () => {
                 <button
                     disabled={selection.length === 0}
                     onClick={() => {
-                        database.from('chat_rooms').insert({
-                            owner_id: user.id,
-                        }).select().then(({
-                                              error,
-                                              data: rooms
-                                          }: any) => {
-                            if (error) return console.log(error)
-                            database.from('chat_room_members')
-                                .insert([user?.id, ...selection].map((userId: any) => {
-                                    return {
-                                        user_id: userId,
-                                        room_id: rooms[0].id
-                                    }
-                                })).select().then(({
-                                                       error,
-                                                   }: any) => {
-                                if (error) return console.log(error)
-                                router.push(`/chats/${rooms[0].id}`)
-                            })
+                        setLoading(true)
+                        handleChatRoomSelection(database, user, selection).then((path: any) => {
+                            router.push(path)
                         })
                     }}
-                    className="bg-sky-500 text-white rounded-full p-2 disabled:bg-gray-500 disabled:cursor-not-allowed disabled:opacity-50">
-                    Start chatting!
+                    className="flex gap-1 bg-sky-500 text-white rounded-full p-2 disabled:bg-gray-500 disabled:cursor-not-allowed disabled:opacity-50">
+                    {loading ? <><IconLoader2 className="animate-spin w-6 h-6"/> Redirecting</> : 'Create chat'}
                 </button>
             </div>
         </div>

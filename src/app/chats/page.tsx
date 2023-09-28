@@ -4,6 +4,8 @@ import {cookies} from "next/headers";
 import {ChatRoomsView} from "@/app/components/chat-rooms-view";
 import {CreateNewChat} from "@/app/components/create-new-chat";
 
+export const dynamic = 'force-dynamic'
+
 export default async function Chats() {
     const database = createServerComponentClient<Database>({cookies})
     const {data: {session}} = await database.auth.getSession()

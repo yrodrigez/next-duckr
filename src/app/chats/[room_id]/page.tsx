@@ -1,5 +1,4 @@
 import {createServerComponentClient} from "@supabase/auth-helpers-nextjs";
-
 import {cookies} from "next/headers";
 import {Section} from "@/app/components/section-server";
 import {ChatRoomTitle} from "@/app/components/chat-room-title";
@@ -7,6 +6,8 @@ import {ChatMessages} from "@/app/components/chat-messages-client";
 import {type Database} from "@/app/types/database";
 import {ChatMessageSend} from "@/app/components/send-chat-message-client";
 import {revalidatePath} from "next/cache";
+
+export const dynamic = 'force-dynamic'
 
 async function sendMessage(message?: string, roomId?: string) {
     'use server'
