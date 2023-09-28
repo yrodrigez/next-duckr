@@ -103,13 +103,16 @@ export function AuthButtonClient({session}: any) {
     const database = createClientComponentClient()
     const router = useRouter()
     const handleSignIn = async (provider: Provider) => {
-
-        return await database.auth.signInWithOAuth({
-            provider,
-            options: {
-                redirectTo: `${location.origin}/auth/callback`
-            }
-        })
+        try {
+            return await database.auth.signInWithOAuth({
+                provider,
+                options: {
+                    redirectTo: `${location.origin}/auth/callback`
+                }
+            })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     if (session && !session.user?.user_metadata?.user_name) {

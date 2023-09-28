@@ -36,8 +36,7 @@ export function ChatRoomTitle({
                               }: any) {
     const {sessionContext} = useContext(SessionContext) as any
     const currentUser = sessionContext?.user
-    const membersWithoutLoggedUser = members.filter(({users}: any) => users?.id !== currentUser?.id)
-
+    const membersWithoutLoggedUser = members.filter(({id}: any) => id !== currentUser?.id)
     return (
         <div
             className="w-full h-14 border-b border-white/30 flex px-6 py-2 items-center hover:bg-white/10 transition-all">

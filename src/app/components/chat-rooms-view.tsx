@@ -1,5 +1,4 @@
 'use client'
-import {Avatar, AvatarGroup} from "@nextui-org/react";
 import Link from "next/link";
 import {ChatRoomTitle} from "@/app/components/chat-room-title";
 

@@ -1,5 +1,4 @@
 'use client'
-
 import {IconMessagePlus, IconCheck, IconLoader2} from "@tabler/icons-react";
 import {useContext, useEffect, useState} from "react";
 import {SessionContext} from "@/app/providers";
@@ -19,10 +18,10 @@ function chatRoomExists(database: any, user: any, selection: any) {
                 if (!data?.length) done({data: []})
                 const rooms = data.filter((room: any) => {
                     if (!room.members) return false
-
+                    const selectionWithUser = [user?.id, ...selection]
                     return room.members.every((member: any) => {
-                        return [user?.id, ...selection].includes(member)
-                    })
+                        return selectionWithUser.includes(member)
+                    }) && selectionWithUser.length === room.members.length
                 })
                 done({data: rooms})
             })
@@ -38,7 +37,7 @@ function createChatRoom(database: any, user: any, selection: any) {
                               data: rooms
                           }: any) => {
             if (err) return error(err)
-            debugger
+
             database.from('chat_room_members')
                 .insert([user?.id, ...selection].map((userId: any) => ({
                         user_id: userId,
@@ -48,7 +47,7 @@ function createChatRoom(database: any, user: any, selection: any) {
                                       data,
                                       err
                                   }: any) => {
-                debugger
+
                 if (err) return error(err)
                 done({data})
             })

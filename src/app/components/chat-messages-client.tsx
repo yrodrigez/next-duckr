@@ -35,7 +35,7 @@ const PinScrollToBottom = ({
                 setScrolledUp((scrollTop + clientHeight) < scrollHeight)
             }}
             ref={ref}
-            className={className || 'flex flex-col gap-3 p-5 overflow-auto flex-grow-2 scroll-smooth'}>
+            className={className || 'flex flex-col gap-3 p-5 overflow-auto flex-grow scroll-smooth'}>
             {children}
         </div>
     )

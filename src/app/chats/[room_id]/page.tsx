@@ -49,18 +49,18 @@ export default async function Page({
     }
 
     return (
-        <Section className="w-screen flex flex-col">
+        <Section className="w-screen flex flex-col h-screen">
             <ChatRoomTitle
                 members={members?.map(({users: user}) => user)}
                 roomName={members?.[0]?.room?.name || 'Chat'}
             />
             <ChatMessages currentUserId={currentUserId} messages={messages}/>
-            <div className="mb-9 md:mb-0">
+            <div className="mb-9 lg:mb-0">
                 <form action={async (formData: FormData) => {
                     'use server'
                     const message = formData.get('message')?.toString()
                     const data = await sendMessage(message, params.room_id)
-                    console.log(data)
+
                     revalidatePath(`/chats/${params.room_id}`)
                 }} className="flex gap-2 p-3">
                     <ChatMessageSend/>
