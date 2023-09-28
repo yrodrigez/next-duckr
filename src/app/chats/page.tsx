@@ -13,8 +13,8 @@ export default async function Chats() {
         .select('*, members:chat_room_members(users(*))')
 
     return (
-        <section className="border-x border-white/30 max-w-[600px] w-screen h-screen pt-6 flex flex-col relative">
-            <div className="w-[100%] overflow-auto border-white/30 border-t ">
+        <section className="border-x border-white/30 max-w-[600px] w-screen h-screen  flex flex-col relative">
+            <div className="w-[100%] overflow-auto border-white/30 border-t flex-grow">
                 <ChatRoomsView rooms={rooms} currentUser={session?.user}/>
             </div>
             <CreateNewChat/>
