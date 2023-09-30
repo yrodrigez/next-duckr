@@ -21,6 +21,7 @@ async function sendMessage(message?: string, roomId?: string) {
         user_id: user.id,
         room_id: roomId
     }
+    
     return database.from('chat_messages').insert(payload)
 }
 
@@ -53,9 +54,12 @@ export default async function Page({
         <form action={async (formData: FormData) => {
             'use server'
             const message = formData.get('message')?.toString()
-            await sendMessage(message, params.room_id)
-
-            revalidatePath(`/chats/${params.room_id}`)
+            try {
+                await sendMessage(message, params.room_id)
+            } catch (e) {
+                console.error(e)
+                revalidatePath(`/chats/${params.room_id}`)
+            }
         }} className="h-full">
             <Section className="flex flex-col pb-[65px] md:pb-0">
                 <ChatRoom

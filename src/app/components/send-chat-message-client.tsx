@@ -42,16 +42,20 @@ export function ChatMessageSend({
                 className="flex-1 bg-gray-500 rounded-full p-3 text-white"
                 placeholder="Type a message"
             />
-            <button className="flex gap-1 bg-sky-500 rounded-full p-3" onClick={
-                () => {
-                    onMessageSend({
-                        user,
-                        message: content,
-                        created_at: new Date().toISOString()
-                    })
-                    setContent('')
-                    inputTextRef.current?.focus()
-                }}>
+            <button
+                className="flex gap-1 bg-sky-500 rounded-full p-3"
+                type="submit"
+                onClick={
+                    () => {
+                        onMessageSend({
+                            user,
+                            message: content,
+                            created_at: new Date().toISOString()
+                        })
+                        setContent('')
+                        inputTextRef.current?.focus()
+                    }}
+               >
                 {pending ? <IconLoader2 className="animate-spin w-6 h-6"/> : <IconSend className="w-6 h-6"/>}
             </button>
         </div>

@@ -41,6 +41,14 @@ const PinScrollToBottom = ({
     )
 }
 
+const PureContainer = ({children}: { children?: any }) => {
+    return (
+        <>
+            {children}
+        </>
+    )
+}
+
 export function ChatMessages({
                                  messages,
                                  currentUserId,
@@ -66,13 +74,15 @@ export function ChatMessages({
                 }
 
                 return arr
-            }, []).map(({
-                            date,
-                            messages
-                        }: any) => {
+            }, []).sort((x: any, y: any) => {
+                return new Date(x.date).getTime() - new Date(y.date).getTime()
+            }).map(({
+                        date,
+                        messages
+                    }: any) => {
 
                 return (
-                    <>
+                    <PureContainer key={new Date(date).getTime()}>
                         <div className="flex flex-col gap-1 items-center">
                             <span className="
                             text-gray-300 text-xs text-center
@@ -81,12 +91,14 @@ export function ChatMessages({
                             ">{formatGroupDate(date)}</span>
                         </div>
                         {
-                            messages.map(({
-                                              user,
-                                              message,
-                                              created_at
-                                          }: any) => (<div key={created_at}
-                                                           className={`flex flex-col gap-1  ${currentUserId === user?.id ? 'self-end' : 'self-start'} flex flex-col`}>
+                            messages.sort((x: any, y: any) => {
+                                return new Date(x.created_at).getTime() - new Date(y.created_at).getTime()
+                            }).map(({
+                                        user,
+                                        message,
+                                        created_at
+                                    }: any) => (<div key={created_at}
+                                                     className={`flex flex-col gap-1  ${currentUserId === user?.id ? 'self-end' : 'self-start'} flex flex-col`}>
                                     <div
                                         className={`flex gap-2 flex-row ${currentUserId === user?.id ? 'flex-row-reverse' : ''}`}>
                                         {currentUserId !== user?.id && user?.avatar_url &&
@@ -106,7 +118,7 @@ export function ChatMessages({
                             ))
 
                         }
-                    </>
+                    </PureContainer>
                 )
             })
             }
