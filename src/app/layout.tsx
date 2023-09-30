@@ -46,7 +46,7 @@ export default async function RootLayout({
 
     return (
         <html lang="en" className="dark ">
-        <body className={`${inter.className} min-h-full bg-black`}>
+        <body className={`${inter.className} h-screen bg-black`}>
         <Providers session={session}>
             <div className="flex bg-black">
                 <header className="z-3 justify-end items-end grow md:flex hidden">

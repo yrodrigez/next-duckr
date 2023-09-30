@@ -32,7 +32,7 @@ export function DuckHeader({
         <>
             <CardHeader className="justify-between items-start flex flex-col">
                 <div className={`flex gap-${isReplying ? '1' : '3'}`}>
-                    <Link href={`/${userName}`}>
+                    <Link href={`/${userName}`} className="z-10">
                         <AvatarClient radius="full" size="md" src={typedAvatarUrl}/>
                     </Link>
                     <div

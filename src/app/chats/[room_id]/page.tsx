@@ -20,7 +20,7 @@ async function sendMessage(message?: string, roomId?: string) {
         user_id: user.id,
         room_id: roomId
     }
-   return database.from('chat_messages').insert(payload)
+    return database.from('chat_messages').insert(payload)
 }
 
 export default async function Page({
@@ -49,17 +49,17 @@ export default async function Page({
     }
 
     return (
-        <Section className="w-screen flex flex-col h-screen">
+        <Section className="w-screen flex flex-col h-screen pb-[65px] md:pb-0">
             <ChatRoomTitle
                 members={members?.map(({users: user}) => user)}
                 roomName={members?.[0]?.room?.name || 'Chat'}
             />
             <ChatMessages currentUserId={currentUserId} messages={messages}/>
-            <div className="pb-16 md:pb-0">
+            <div>
                 <form action={async (formData: FormData) => {
                     'use server'
                     const message = formData.get('message')?.toString()
-                    const data = await sendMessage(message, params.room_id)
+                    await sendMessage(message, params.room_id)
 
                     revalidatePath(`/chats/${params.room_id}`)
                 }} className="flex gap-2 p-3">

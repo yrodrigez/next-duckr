@@ -66,20 +66,13 @@ export function ChatMessages({
                              }: {
     messages?: any, currentUserId?: any
 }) {
-    const database = createClientComponentClient()
-    const router = useRouter()
     const [optimisticMessages, addOptimisticMessage] = useOptimistic<any, any>(messages, (currentMessages, newMessage) => {
         if (!currentMessages || !newMessage) return currentMessages;
 
-        if (!newMessage.id) {
-            throw new Error('Message must have an id');
-        }
-
         return updateOrInsertMessage(currentMessages, newMessage);
     })
-
-    const [intervalId, setIntervalId] = useState<any>(null)
-
+    const router = useRouter()
+    const database = createClientComponentClient()
     useEffect(() => {
         const messagesChannel = database.channel('realtime messages')
             .on('postgres_changes', {
@@ -91,7 +84,7 @@ export function ChatMessages({
         return () => {
             database.removeChannel(messagesChannel)
         }
-    }, [database, optimisticMessages, intervalId])
+    }, [database, optimisticMessages])
 
     const formattedDate = (date: any) => moment(date).format('MMM DD, YYYY')
     return (

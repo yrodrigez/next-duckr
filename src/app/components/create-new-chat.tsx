@@ -142,12 +142,8 @@ export function CreateNewChat() {
     return (
         <>
             <div
-                className="absolute bottom-36 md:bottom-6 right-4 z-10">
-                <button onClick={onOpen} className="
-                    rounded-full
-                    bg-sky-500
-                    p-3
-                "><IconMessagePlus size={30} color="white"/></button>
+                className="absolute bottom-[6rem] md:bottom-[4rem] right-4 z-10">
+                <button onClick={onOpen} className="rounded-full bg-sky-500 p-3"><IconMessagePlus size={30} color="white"/></button>
             </div>
 
             <Modal
