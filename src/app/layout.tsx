@@ -48,7 +48,7 @@ export default async function RootLayout({
         <html lang="en" className="dark ">
         <body className={`${inter.className} h-screen bg-black`}>
         <Providers session={session}>
-            <div className="flex bg-black">
+            <div className="flex bg-black h-full">
                 <header className="z-3 justify-end items-end grow md:flex hidden">
                     <div className="fixed h-[100%] top-0">
                         {
@@ -59,15 +59,15 @@ export default async function RootLayout({
                         }
                     </div>
                 </header>
-                <main className="flex flex-col items-center md:items-start justify-between grow h-screen">
+                <main className="flex flex-col items-center md:items-start justify-between grow h-full">
                     {children}
                     {
-                        session && <div className="md:hidden align-middle justify-center max-w-[600px] w-screen">
-                        <div
-                          className="fixed bottom-0 max-w-[600px] w-screen border-t border-l border-r border-white/30 flex justify-between items-center py-3 px-6 bg-black z-10">
-                          <UserPanel/>
-                        </div>
-                      </div>
+                        session && (
+                            <div
+                                className="md:hidden align-middle max-w-[600px] w-screen h-[65px] fixed bottom-0 border-t border-l border-r border-white/30 flex justify-between items-center py-3 px-6 bg-black z-10">
+                                <UserPanel/>
+                            </div>
+                        )
                     }
                 </main>
             </div>

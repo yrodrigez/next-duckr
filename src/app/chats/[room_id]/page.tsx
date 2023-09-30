@@ -6,6 +6,7 @@ import {ChatMessages} from "@/app/components/chat-messages-client";
 import {type Database} from "@/app/types/database";
 import {ChatMessageSend} from "@/app/components/send-chat-message-client";
 import {revalidatePath} from "next/cache";
+import {ChatRoom} from "@/app/components/chat-room-client";
 
 export const dynamic = 'force-dynamic'
 
@@ -49,23 +50,23 @@ export default async function Page({
     }
 
     return (
-        <Section className="w-screen flex flex-col h-screen pb-[65px] md:pb-0">
-            <ChatRoomTitle
-                members={members?.map(({users: user}) => user)}
-                roomName={members?.[0]?.room?.name || 'Chat'}
-            />
-            <ChatMessages currentUserId={currentUserId} messages={messages}/>
-            <div>
-                <form action={async (formData: FormData) => {
-                    'use server'
-                    const message = formData.get('message')?.toString()
-                    await sendMessage(message, params.room_id)
+        <form action={async (formData: FormData) => {
+            'use server'
+            const message = formData.get('message')?.toString()
+            await sendMessage(message, params.room_id)
 
-                    revalidatePath(`/chats/${params.room_id}`)
-                }} className="flex gap-2 p-3">
-                    <ChatMessageSend/>
-                </form>
-            </div>
-        </Section>
+            revalidatePath(`/chats/${params.room_id}`)
+        }} className="h-full">
+            <Section className="flex flex-col pb-[65px] md:pb-0">
+                <ChatRoom
+                    currentUserId={currentUserId}
+                    room={{
+                        members,
+                        messages
+                    }}
+                />
+            </Section>
+        </form>
+
     )
 }
