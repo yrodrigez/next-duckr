@@ -59,7 +59,7 @@ export default async function RootLayout({
                         }
                     </div>
                 </header>
-                <main className="flex flex-col items-center md:items-start justify-between grow h-screen min-h-3/6 w-8/12 sm:w-8/12 sm:min-h-3/6 md:w-7/12 md:min-h-2.5/6 lg:w-5/12 lg:min-h-2.5/6 xl:w-4/12 xl:min-h-2.5/6 2xl:w-3.5/12 2xl:min-h-4/6">
+                <main className="flex flex-col items-center md:items-start justify-between grow h-screen">
                     {children}
                     {
                         session && <div className="md:hidden align-middle justify-center max-w-[600px] w-screen">
