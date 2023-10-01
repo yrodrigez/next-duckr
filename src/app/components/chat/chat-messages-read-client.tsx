@@ -54,8 +54,9 @@ export function ChatMessagesRead({
                     schema: 'public',
                     table: 'chat_message_read',
                 },
-                (router.refresh)
-                    .subscribe()
+                router.refresh
+            )
+            .subscribe()
 
         return () => {
             database.removeChannel(unreadMessagesChannel)
