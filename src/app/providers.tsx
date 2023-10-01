@@ -2,10 +2,9 @@
 'use client'
 
 import {NextUIProvider} from '@nextui-org/react'
-import {type Session} from '@supabase/auth-helpers-nextjs'
-import {createContext, useState} from 'react'
+import {createClientComponentClient, type Session} from '@supabase/auth-helpers-nextjs'
+import {createContext, useState, useEffect} from 'react'
 import {redirect, usePathname} from "next/navigation";
-import {stat} from "fs";
 
 const SessionContext = createContext({} as Session | null)
 export {SessionContext}

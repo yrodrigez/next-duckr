@@ -6,9 +6,10 @@ import {createServerComponentClient} from '@supabase/auth-helpers-nextjs'
 import {cookies} from 'next/headers'
 import {Database} from './types/database'
 import {AuthButtonServer} from "@/app/components/auth-button-server";
-import {IconHome2, IconMessages} from "@tabler/icons-react";
+import {IconHome2} from "@tabler/icons-react";
 
 import Link from "next/link";
+import {PanelChatsButton} from "@/app/components/chat/panel-chats-button-client";
 
 export const dynamic = 'force-dynamic'
 
@@ -27,7 +28,7 @@ const UserPanel = () => {
                     <IconHome2 size={40} color="white" className="m-0"/>
                 </Link>
                 <Link href={'/chats'}>
-                    <IconMessages size={40} color="white" className="m-0"/>
+                    <PanelChatsButton/>
                 </Link>
             </div>
             <AuthButtonServer/>

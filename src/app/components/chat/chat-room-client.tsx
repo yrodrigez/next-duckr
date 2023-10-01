@@ -1,6 +1,6 @@
 'use client'
-import {ChatRoomTitle} from "@/app/components/chat-room-title";
-import {ChatMessages} from "@/app/components/chat-messages-client";
+import {ChatRoomTitle} from "@/app/components/chat/chat-room-title";
+import {ChatMessages} from "@/app/components/chat/chat-messages-client";
 import {ChatMessageSend} from "@/app/components/send-chat-message-client";
 import {experimental_useOptimistic as useOptimistic, useEffect} from "react";
 import {useRouter} from "next/navigation";
@@ -62,7 +62,8 @@ export function ChatRoom({
             />
             <ChatMessages
                 currentUserId={currentUserId}
-                messages={optimisticMessages}/>
+                messages={optimisticMessages}
+            />
             <ChatMessageSend onMessageSend={addOptimisticMessage}/>
         </>
     )

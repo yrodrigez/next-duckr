@@ -32,7 +32,8 @@ function formatUserList(users: any[]) {
 
 export function ChatRoomTitle({
                                   members,
-                                  roomName
+                                  roomName,
+                                  unreadCount,
                               }: any) {
     const {sessionContext} = useContext(SessionContext) as any
     const currentUser = sessionContext?.user
@@ -44,6 +45,8 @@ export function ChatRoomTitle({
                 {members.map((user: any) => <Avatar key={user?.id} src={user?.avatar_url}/>)}
             </AvatarGroup>
             <p className="h-fit ml-2">{roomName ? roomName : formatUserList(membersWithoutLoggedUser)}</p>
+            {unreadCount > 0 && <span
+                className="ml-auto bg-sky-500 text-white text-xs px-2 py-1 rounded-full">{unreadCount}</span>}
         </div>
     )
 }

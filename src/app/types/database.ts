@@ -270,6 +270,12 @@ export interface Database {
       }
     }
     Functions: {
+      get_accessible_rooms: {
+        Args: {
+          user_id: string
+        }
+        Returns: string[]
+      }
       is_user_alloed_to_see_members: {
         Args: {
           tu_puta_madre_id: boolean
@@ -279,6 +285,13 @@ export interface Database {
       is_user_allowed_to_see_members: {
         Args: {
           tu_puta_madre_id: string
+        }
+        Returns: boolean
+      }
+      is_user_owner_of_room: {
+        Args: {
+          user_id: string
+          room_id: string
         }
         Returns: boolean
       }
