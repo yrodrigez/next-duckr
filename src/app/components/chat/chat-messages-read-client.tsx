@@ -66,7 +66,7 @@ export function ChatMessagesRead({
         return () => {
             database.removeChannel(unreadMessagesChannel)
         }
-    }, [session?.user?.id, filters])
+    }, [session?.user?.id, filters, database])
 
     return children(unreadMessages)
 }
