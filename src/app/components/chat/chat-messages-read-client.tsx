@@ -52,7 +52,7 @@ export function ChatMessagesRead({
                     table: 'chat_message_read',
                 },
                 ({new: newData}: any) => {
-                    setUnreadMessages((prevUnreadMessages: any) => [...prevUnreadMessages || []]
+                    setUnreadMessages( [...unreadMessages || []]
                         .map((msg: any) => msg.id === newData.id ? {...msg, ...newData} : msg)
                         .filter((msg: any) => {
                             if (filters?.room_id && msg.room_id !== filters?.room_id) return false
