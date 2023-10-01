@@ -2,6 +2,8 @@ import {type ReactNode} from "react";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {useContext, useEffect, useState} from "react";
 import {SessionContext} from "@/app/providers";
+import {router} from "next/client";
+import {useRouter} from "next/navigation";
 
 type Filters = {
     room_id?: string
@@ -21,6 +23,7 @@ export function ChatMessagesRead({
     const database = createClientComponentClient();
     const {sessionContext: session}: any = useContext(SessionContext);
     const [unreadMessages, setUnreadMessages] = useState<any>([]) // or appropriate initial state
+    const router = useRouter()
 
     useEffect(() => {
         let query = database.from('chat_message_read')
@@ -51,17 +54,8 @@ export function ChatMessagesRead({
                     schema: 'public',
                     table: 'chat_message_read',
                 },
-                ({new: newData}: any) => {
-                    setUnreadMessages((prevUnreadMessages: any) => [...prevUnreadMessages || []]
-                        .map((msg: any) => msg.message_id === newData.message_id ? {...msg, ...newData} : msg)
-                        .filter((msg: any) => {
-                            if (filters?.room_id && msg.room_id !== filters?.room_id) return false
-                            if (filters?.user_id && msg.user_id !== filters?.user_id) return false
-                            return !(filters?.unreadOnly && msg.read_at !== null)
-                        }))
-                }
-            )
-            .subscribe()
+                (router.refresh)
+                    .subscribe()
 
         return () => {
             database.removeChannel(unreadMessagesChannel)
