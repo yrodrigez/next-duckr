@@ -54,14 +54,14 @@ export function ChatMessagesRead({
                     table: 'chat_message_read',
                 },
                 ({new: newData}: any) => {
-                    setUnreadMessages((prevMessages: any)=> [...prevMessages || []]
+                    setUnreadMessages((prevMessages: any) => [...prevMessages || []]
                         .map((msg: any) => msg.id === newData.id ? {...msg, ...newData} : msg)
                         .filter((msg: any) => {
                             if (filters?.room_id && msg.room_id !== filters?.room_id) return false
                             if (filters?.user_id && msg.user_id !== filters?.user_id) return false
                             return !(filters?.unreadOnly && msg.read_at !== null)
                         }))
-                    // router.refresh()
+                    router.refresh()
                 }
             )
             .subscribe()
