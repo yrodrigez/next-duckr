@@ -22,7 +22,6 @@ export function ChatMessagesRead({
     const database = createClientComponentClient();
     const {sessionContext: session}: any = useContext(SessionContext);
     const [unreadMessages, setUnreadMessages] = useState<any>([]) // or appropriate initial state
-    const router = useRouter()
 
     useEffect(() => {
         let query = database.from('chat_message_read')
@@ -61,7 +60,6 @@ export function ChatMessagesRead({
                             if (filters?.user_id && msg.user_id !== filters?.user_id) return false
                             return !(filters?.unreadOnly && msg.read_at !== null)
                         }))
-                    router.refresh()
                 }
             )
             .subscribe()
@@ -69,7 +67,7 @@ export function ChatMessagesRead({
         return () => {
             database.removeChannel(unreadMessagesChannel)
         }
-    }, [session?.user?.id, filters, database, router])
+    }, [session?.user?.id, filters, database])
 
     return children(unreadMessages)
 }
