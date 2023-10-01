@@ -25,7 +25,7 @@ export function ChatMessagesRead({
 
     useEffect(() => {
         let query = database.from('chat_message_read')
-            .select('*, message:chat_messages(*,room:chat_rooms(id))')
+            .select('*')
 
         if (filters?.room_id) {
             query = query.filter('room_id', 'eq', filters.room_id)

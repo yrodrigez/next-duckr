@@ -2,6 +2,7 @@
 import Link from "next/link";
 import {ChatRoomTitle} from "@/app/components/chat/chat-room-title";
 import {ChatMessagesRead} from "@/app/components/chat/chat-messages-read-client";
+import {experimental_useOptimistic as useOptimistic} from "react";
 
 export const RoomView = ({
                              room
@@ -31,7 +32,7 @@ export function ChatRoomsView({
             unreadOnly: true
         }}>{(unreadMessages: any) => {
             const roomsWithUnreadMessages = rooms?.map((room: any) => {
-                const _unreadMessages = unreadMessages?.filter(({message}: any) => message.room.id === room.id)
+                const _unreadMessages = unreadMessages?.filter((message: any) => message.room_id === room.id)
                 return {
                     ...room,
                     unreadMessages: _unreadMessages?.length || 0
