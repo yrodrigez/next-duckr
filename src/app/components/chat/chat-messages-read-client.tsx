@@ -52,7 +52,6 @@ export function ChatMessagesRead({
                     table: 'chat_message_read',
                 },
                 ({new: newData}: any) => {
-                    console.log('newData', newData)
                     setUnreadMessages((prevUnreadMessages: any) => [...prevUnreadMessages || []]
                         .map((msg: any) => msg.message_id === newData.message_id ? {...msg, ...newData} : msg)
                         .filter((msg: any) => {

@@ -48,6 +48,7 @@ export function ChatRoomsView({
             user_id: currentUser?.id,
             unreadOnly: true
         }}>{(unreadMessages: any) => {
+            console.log(unreadMessages)
             const roomsWithUnreadMessages = rooms?.map((room: any) => {
                 const _unreadMessages = unreadMessages?.filter(({message}: any) => message.room.id === room.id)
                 return {
