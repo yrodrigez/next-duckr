@@ -5,7 +5,6 @@ import {ChatMessageSend} from "@/app/components/send-chat-message-client";
 import {experimental_useOptimistic as useOptimistic, useEffect} from "react";
 import {useRouter} from "next/navigation";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
-
 const updateOrInsertMessage = (messages: any, newMessage: any) => {
     const newMessages = [...messages];
     const indexById = newMessages.findIndex(msg => msg.id === newMessage.id);
@@ -15,14 +14,16 @@ const updateOrInsertMessage = (messages: any, newMessage: any) => {
         return newMessages;
     }
 
-    const indexByDate = newMessages.findIndex(msg => msg.created_at < newMessage.created_at);
-    if (indexByDate === -1) {
-        newMessages.push(newMessage);
-    } else {
-        newMessages.splice(indexByDate, 0, newMessage);
-    }
+    newMessages.push(newMessage);
 
     return newMessages;
+}
+
+function updateReadAt(database: any, roomId: string, userId: string) {
+    database.from('chat_message_read')
+        .update({read_at: new Date()})
+        .filter('user_id', 'eq', userId)
+        .filter('room_id', 'eq', roomId)
 }
 
 export function ChatRoom({
@@ -47,7 +48,10 @@ export function ChatRoom({
                 event: '*',
                 schema: 'public',
                 table: 'chat_messages'
-            }, router.refresh).subscribe()
+            }, ()=> {
+                updateReadAt(database, room.id, currentUserId)
+                router.refresh()
+            }).subscribe()
 
         return () => {
             database.removeChannel(messagesChannel)

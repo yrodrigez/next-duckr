@@ -33,8 +33,8 @@ async function sendMessage(message?: string, roomId?: string, usersIds?: string[
         })))
 }
 
-async function updateReadAt(database: any, roomId: string, userId: string) {
-    await database.from('chat_message_read')
+export async function updateReadAt(database: any, roomId: string, userId: string) {
+    return database.from('chat_message_read')
         .update({read_at: new Date()})
         .filter('user_id', 'eq', userId)
         .filter('room_id', 'eq', roomId)

@@ -1,8 +1,10 @@
 'use client'
 import Link from "next/link";
 import {ChatRoomTitle} from "@/app/components/chat/chat-room-title";
-import {ChatMessagesRead} from "@/app/components/chat/chat-messages-read-client";
-import {experimental_useOptimistic as useOptimistic} from "react";
+import {useChatMessagesRead} from "@/app/components/chat/chat-messages-read-hook";
+import {useEffect} from "react";
+import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
+import {useRouter} from "next/navigation";
 
 export const RoomView = ({
                              room
@@ -20,28 +22,43 @@ export function ChatRoomsView({
                                   rooms,
                                   currentUser
                               }: { rooms?: any, currentUser?: any }) {
-    if (!rooms) {
-        return <div className="h-screen flex align-middle justify-center">
-            <p className="self-center text-white font-bold text-xl">Start chatting with people!</p>
-        </div>
+
+    const router = useRouter()
+    const database = createClientComponentClient()
+    const unreadMessages = useChatMessagesRead({
+        user_id: currentUser?.id,
+        unreadOnly: true,
+    });
+
+    useEffect(() => {
+        const messagesChannel = database.channel('realtime messages')
+            .on('postgres_changes', {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'chat_rooms'
+            }, router.refresh).subscribe()
+
+        return () => {
+            database.removeChannel(messagesChannel)
+        }
+
+    }, [database, unreadMessages]);
+
+    if (!rooms || !rooms?.length) {
+        return (
+            <div className="h-screen flex align-middle justify-center">
+                <p className="self-center text-white font-bold text-xl">Start chatting with people!</p>
+            </div>
+        )
     }
 
-    return (
-        <ChatMessagesRead filters={{
-            user_id: currentUser?.id,
-            unreadOnly: true
-        }}>{(unreadMessages: any) => {
-            const roomsWithUnreadMessages = rooms?.map((room: any) => {
-                const _unreadMessages = unreadMessages?.filter((message: any) => message.room_id === room.id)
-                return {
-                    ...room,
-                    unreadMessages: _unreadMessages?.length || 0
-                }
-            })
-            return roomsWithUnreadMessages?.map((room: any) => (
-                <RoomView key={room?.id} room={room} currentUser={currentUser}/>
-            ))
-        }}
-        </ChatMessagesRead>
-    )
+    return (rooms || []).map((room: any) => {
+        const roomUnreadMessages = unreadMessages?.filter((message: any) => message.room_id === room.id)
+        const roomWithUnreadMessages = {
+            ...room,
+            unreadMessages: roomUnreadMessages?.length || 0
+        }
+
+        return <RoomView key={roomWithUnreadMessages?.id} room={roomWithUnreadMessages} currentUser={currentUser}/>
+    })
 }
