@@ -1,10 +1,11 @@
 'use client'
 import Link from "next/link";
 import {ChatRoomTitle} from "@/app/components/chat/chat-room-title";
-import {useChatMessagesRead} from "@/app/components/chat/chat-messages-read-hook";
 import {useEffect} from "react";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {useRouter} from "next/navigation";
+import {useContext} from "react";
+import {ChatMessagesReadContext} from "@/app/providers";
 
 export const RoomView = ({
                              room
@@ -25,10 +26,7 @@ export function ChatRoomsView({
 
     const router = useRouter()
     const database = createClientComponentClient()
-    const unreadMessages = useChatMessagesRead({
-        user_id: currentUser?.id,
-        unreadOnly: true,
-    });
+    const unreadMessages = useContext(ChatMessagesReadContext)
 
     useEffect(() => {
         const messagesChannel = database.channel('realtime messages')
@@ -53,7 +51,7 @@ export function ChatRoomsView({
     }
 
     return (rooms || []).map((room: any) => {
-        const roomUnreadMessages = unreadMessages?.filter((message: any) => message.room_id === room.id)
+        const roomUnreadMessages = unreadMessages?.filter((message: any) => message.room_id === room.id && message.user_id === currentUser?.id && !message.read_at)
         const roomWithUnreadMessages = {
             ...room,
             unreadMessages: roomUnreadMessages?.length || 0
