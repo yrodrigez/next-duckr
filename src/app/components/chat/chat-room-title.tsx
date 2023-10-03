@@ -4,7 +4,6 @@ import {SessionContext} from "@/app/providers";
 import {useContext} from "react";
 import {IconChevronLeft} from "@tabler/icons-react";
 
-
 function formatUserList(users: any[]) {
     let output = "You";
 
@@ -43,10 +42,13 @@ export function ChatRoomTitle({
     const membersWithoutLoggedUser = members.filter(({id}: any) => id !== currentUser?.id)
     return (
         <div
-            className={`w-full h-14 border-b border-white/30 flex ${withBackButton? 'px-2' :'px-6'} py-2 items-center hover:bg-white/10 transition-all`}>
-            {withBackButton && <button className="mr-2" onClick={() => window.history.back()}>
+            className={`w-full h-14 border-b border-white/30 flex ${withBackButton ? 'px-2' : 'px-6'} py-2 items-center hover:bg-white/10 transition-all`}>
+            {withBackButton && <span className="mr-2" onClick={(e) => {
+                e.preventDefault()
+                window.history.back()
+            }}>
               <IconChevronLeft/>
-            </button>}
+            </span>}
             <AvatarGroup max={3}>
                 {members.map((user: any) => <Avatar key={user?.id} src={user?.avatar_url}/>)}
             </AvatarGroup>

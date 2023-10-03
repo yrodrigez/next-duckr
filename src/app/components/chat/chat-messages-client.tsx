@@ -25,18 +25,22 @@ const PinScrollToBottom = ({
     })
 
     return (
-        <div
-            onScroll={(e) => {
-                const {
-                    scrollTop,
-                    scrollHeight,
-                    clientHeight
-                } = e.target as HTMLDivElement
-                setScrolledUp((scrollTop + clientHeight) < scrollHeight)
-            }}
-            ref={ref}
-            className={className || 'flex flex-col gap-3 p-5 overflow-auto flex-grow scroll-smooth'}>
-            {children}
+        <div className="flex flex-col justify-end h-full overflow-hidden">
+            <div
+                onScroll={(e) => {
+                    const {
+                        scrollTop,
+                        scrollHeight,
+                        clientHeight
+                    } = e.target as HTMLDivElement
+                    setScrolledUp((scrollTop + clientHeight) < scrollHeight)
+                }}
+                ref={ref}
+                className={className || 'flex gap-3 p-5 overflow-auto scroll-smooth flex-col'}>
+
+                {children}
+
+            </div>
         </div>
     )
 }
@@ -84,11 +88,8 @@ export function ChatMessages({
                 return (
                     <PureContainer key={new Date(date).getTime()}>
                         <div className="flex flex-col gap-1 items-center">
-                            <span className="
-                            text-gray-300 text-xs text-center
-                            bg-gray-500 rounded-full
-                            px-3 py-1
-                            ">{formatGroupDate(date)}</span>
+                            <span
+                                className="text-gray-300 text-xs text-center bg-gray-500 rounded-full px-3 py-1">{formatGroupDate(date)}</span>
                         </div>
                         {
                             messages.sort((x: any, y: any) => {
@@ -97,18 +98,20 @@ export function ChatMessages({
                                         user,
                                         message,
                                         created_at
-                                    }: any) => (<div key={created_at}
-                                                     className={`flex flex-col gap-1  ${currentUserId === user?.id ? 'self-end' : 'self-start'} flex flex-col`}>
+                                    }: any) => (
+                                <div key={created_at}
+                                     className={`flex flex-col gap-1 ${currentUserId === user?.id ? 'ml-auto' : ''} self-baseline flex flex-col`}>
                                     <div
-                                        className={`flex gap-2 flex-row ${currentUserId === user?.id ? 'flex-row-reverse' : ''}`}>
+                                        className={`flex gap-2  ${/*currentUserId === user?.id ? 'flex-row-reverse' :*/ 'flex-row'}`}>
                                         {currentUserId !== user?.id && user?.avatar_url &&
                                           <img src={user?.avatar_url} className="w-8 h-8 rounded-full self-end"
                                                alt={`${user.user_name} avatar`}/>}
                                         <div
-                                            className={`px-3 py-2 ${currentUserId !== user?.id ? 'bg-green-700' : 'bg-gray-500'} rounded h-full flex flex-col`}>
-                    <span
-                        className="text-gray-300 text-xs">{`${currentUserId === user?.id ? 'you' : `@${user?.user_name}`}`}</span>
-                                            <p className="text-white max-w-[350px]">{message}</p>
+                                            className={`px-6 py-2 ${currentUserId !== user?.id ? 'bg-sky-500' : 'bg-gray-500'} rounded-t-xl ${currentUserId !== user?.id ? 'rounded-br-2xl' : 'rounded-bl-2xl'} h-full flex flex-col`}>
+                    <span className="text-gray-300 text-xs">
+                        {`${currentUserId === user?.id ? 'you' : `@${user?.user_name}`}`}
+                    </span>
+                                            <p className="text-white max-w-[350px] break-all">{message}</p>
                                             <span
                                                 className={`text-gray-300 text-xs text-right`}>{formattedDate(created_at)}</span>
                                         </div>
