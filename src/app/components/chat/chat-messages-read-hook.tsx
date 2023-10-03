@@ -46,7 +46,6 @@ export function useChatMessagesRead() {
                 table: 'chat_message_read',
             }, ({
                     new: newData,
-                    old: oldData,
                     eventType
                 }: any) => {
                 setUnreadMessages((prevUnreadMessages: any) => {
