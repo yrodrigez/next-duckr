@@ -17,6 +17,10 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      animation: {
+        // Bounces 5 times 1s equals 5 seconds
+        'bounce-short': 'bounce .75s ease-in-out 5'
+      }
     },
   },
   darkMode: "class",
