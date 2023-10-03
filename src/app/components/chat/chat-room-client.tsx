@@ -5,6 +5,7 @@ import {ChatMessageSend} from "@/app/components/send-chat-message-client";
 import {experimental_useOptimistic as useOptimistic, useEffect} from "react";
 import {useRouter} from "next/navigation";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
+import Link from "next/link";
 const updateOrInsertMessage = (messages: any, newMessage: any) => {
     const newMessages = [...messages];
     const indexById = newMessages.findIndex(msg => msg.id === newMessage.id);
@@ -63,6 +64,7 @@ export function ChatRoom({
             <ChatRoomTitle
                 members={members?.map(({users: user}: any) => user)}
                 roomName={members?.[0]?.room?.name || 'Chat'}
+                withBackButton
             />
             <ChatMessages
                 currentUserId={currentUserId}
