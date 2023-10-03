@@ -3,13 +3,7 @@ import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {useContext, useEffect, useState} from "react";
 import {SessionContext} from "@/app/providers";
 
-type Filters = {
-    room_id?: string
-    user_id?: string
-    unreadOnly?: boolean
-}
-
-type MessageReadEvent = {
+export type MessageReadEvent = {
     id: string
     room_id: string
     user_id: string
@@ -19,30 +13,28 @@ type MessageReadEvent = {
     received_at: string | null
 }
 
-export function useChatMessagesRead(filters?: Filters) {
+export function useChatMessagesRead() {
     const database = createClientComponentClient();
     const {sessionContext: session}: any = useContext(SessionContext);
     const [unreadMessages, setUnreadMessages] = useState<MessageReadEvent[]>([]); // or appropriate initial state
+    const [debouncedUnreadMessages, setDebouncedUnreadMessages] = useState<MessageReadEvent[]>([]);
 
     useEffect(() => {
-        let query = database.from('chat_message_read')
-            .select('*, message:chat_messages(*,room:chat_rooms(id))');
+        const debounceTimer = setTimeout(() => {
+            setDebouncedUnreadMessages(unreadMessages);
+        }, 300);
 
-        if (filters?.room_id) {
-            query = query.filter('room_id', 'eq', filters.room_id);
-        }
+        return () => {
+            clearTimeout(debounceTimer);
+        };
+    }, [unreadMessages]);
 
-        if (filters?.user_id) {
-            query = query.filter('user_id', 'eq', filters.user_id);
-        }
-
-        if (filters?.unreadOnly) {
-            query = query.filter('read_at', 'is', null);
-        }
-
-        query.then(({data}: any) => {
-            setUnreadMessages(data);
-        });
+    useEffect(() => {
+        database.from('chat_message_read')
+            .select('*, message:chat_messages(*,room:chat_rooms(id))')
+            .then(({data}: any) => {
+                setUnreadMessages(data);
+            });
     }, []);
 
     useEffect(() => {
@@ -58,14 +50,20 @@ export function useChatMessagesRead(filters?: Filters) {
                     eventType
                 }: any) => {
                 setUnreadMessages((prevUnreadMessages: any) => {
-                    return (prevUnreadMessages || []).reduce((acc: any, msg: any) => {
-                        if (msg.id === newData.id) {
-                            acc.push({...msg, ...newData})
-                            return acc;
-                        }
-                        acc.push(msg);
-                        return acc;
-                    }, []);
+                    if (eventType === 'DELETE') {
+                        return (prevUnreadMessages || []).filter((msg: any) => msg.id !== newData.id);
+                    }
+
+                    if (eventType === 'UPDATE') {
+                        return (prevUnreadMessages || []).map((msg: any) => {
+                            if (msg.id === newData.id) {
+                                return {...msg, ...newData};
+                            }
+                            return msg;
+                        });
+                    }
+                    // INSERT
+                    return [newData, ...(prevUnreadMessages || [])];
                 })
             })
             .subscribe();
@@ -73,7 +71,7 @@ export function useChatMessagesRead(filters?: Filters) {
         return () => {
             database.removeChannel(unreadMessagesChannel);
         };
-    }, [session?.user?.id, filters]);
+    }, [session?.user?.id]);
 
-    return unreadMessages;
+    return debouncedUnreadMessages;
 }
