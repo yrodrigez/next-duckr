@@ -30,7 +30,7 @@ export function ChatMessageBubble({  currentUserId, user, message, created_at }:
                     <span className="text-gray-300 text-xs">
                         {`${isCurrentUser ? 'you' : `@${user?.user_name}`}`}
                     </span>
-                    <p className="text-white max-w-[350px] break-all">{message}</p>
+                    <p className="text-white max-w-[350px] break-words">{message}</p>
                     <span
                         className={`text-gray-300 text-xs text-right absolute ${isCurrentUser ? 'right-1' : 'left-1'} -bottom-5`}>{formattedDate(created_at)}</span>
                 </div>

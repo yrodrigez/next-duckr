@@ -3,6 +3,7 @@ import {useContext, useEffect, useRef, useState} from "react";
 import {experimental_useFormStatus as useFormStatus} from "react-dom";
 import {IconSend} from "@tabler/icons-react";
 import {SessionContext} from "@/app/providers";
+import { v4 as uuid } from 'uuid';
 
 export function ChatMessageSend({
                                     onMessageSend,
@@ -47,6 +48,7 @@ export function ChatMessageSend({
                     () => {
                         if (!content) return
                         onMessageSend({
+                            id: uuid(),
                             user,
                             message: content,
                             created_at: new Date().toISOString()

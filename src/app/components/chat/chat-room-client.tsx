@@ -42,9 +42,9 @@ export function ChatRoom({
     const [optimisticMessages, addOptimisticMessage] = useOptimistic<any, any>(messages, (currentMessages, newMessage) => {
         if (!currentMessages || !newMessage) return currentMessages;
 
-        return updateOrInsertMessage(currentMessages, newMessage);
+        return [...currentMessages, newMessage]
     })
-    const router = useRouter()
+
     const database = createClientComponentClient()
     const [membersWithPresence, setMembersWithPresence] = useState<any[]>([])
     useEffect(() => {
@@ -77,7 +77,7 @@ export function ChatRoom({
             roomStatus.untrack()
             database.removeChannel(roomStatus)
         }
-    }, []);
+    }, [currentUserId]);
 
     useEffect(() => {
         const messagesChannel = database.channel('realtime messages')
@@ -89,16 +89,13 @@ export function ChatRoom({
                 updateReadAt(database, room.id, currentUserId)
                 setMessages((prevMessages: any) => {
                     const user = members?.find(({users: user}: any) => user.id === newMessage.user_id)?.users
-                    const newBubbleMessage: ChatMessageBubbleProps = {
+                    const newBubbleMessage = {
                         ...newMessage,
-                        user,
-                        currentUserId
+                        user
                     }
                     if (!prevMessages) return prevMessages
                     return updateOrInsertMessage(prevMessages, newBubbleMessage)
                 })
-
-                router.refresh()
             }).subscribe()
 
         return () => {

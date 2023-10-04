@@ -32,6 +32,8 @@ export function useChatMessagesRead() {
     useEffect(() => {
         database.from('chat_message_read')
             .select('*, message:chat_messages(*,room:chat_rooms(id))')
+            .order('created_at', {ascending: false})
+            .range(0, 300)
             .then(({data}: any) => {
                 setUnreadMessages(data);
             });

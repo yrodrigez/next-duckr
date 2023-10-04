@@ -9,6 +9,61 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      chat_message_read: {
+        Row: {
+          created_at: string
+          id: string
+          message_id: string
+          read_at: string | null
+          received_at: string
+          room_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message_id: string
+          read_at?: string | null
+          received_at?: string
+          room_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message_id?: string
+          read_at?: string | null
+          received_at?: string
+          room_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_message_read_message_id_fkey"
+            columns: ["message_id"]
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_message_read_room_id_fkey"
+            columns: ["room_id"]
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_message_read_room_id_fkey"
+            columns: ["room_id"]
+            referencedRelation: "chat_room_members_view"
+            referencedColumns: ["room_id"]
+          },
+          {
+            foreignKeyName: "chat_message_read_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       chat_messages: {
         Row: {
           created_at: string
