@@ -2,11 +2,10 @@
 import {ChatRoomTitle} from "@/app/components/chat/chat-room-title";
 import {ChatMessages} from "@/app/components/chat/chat-messages-client";
 import {ChatMessageSend} from "@/app/components/chat/send-chat-message-client";
-import {experimental_useOptimistic as useOptimistic, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {createClientComponentClient, createServerComponentClient} from "@supabase/auth-helpers-nextjs";
-import {ChatMessageBubbleProps} from "@/app/components/chat/chat-message-bubble";
-import {cookies} from "next/headers";
+
 
 const updateOrInsertMessage = (messages: any, newMessage: any) => {
     const newMessages = [...messages];

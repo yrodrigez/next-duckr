@@ -19,7 +19,7 @@ const PinScrollToBottom = ({
         if (!current) return
 
         if (scrolledUp) return
-        scroll(ref)
+        setTimeout(()=> scroll(ref), 100)
     })
 
     return (
