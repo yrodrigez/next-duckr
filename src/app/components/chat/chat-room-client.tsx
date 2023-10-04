@@ -6,7 +6,6 @@ import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {createClientComponentClient, createServerComponentClient} from "@supabase/auth-helpers-nextjs";
 
-
 const updateOrInsertMessage = (messages: any, newMessage: any) => {
     const newMessages = [...messages];
     const indexById = newMessages.findIndex(msg => msg.id === newMessage.id);
@@ -39,18 +38,27 @@ function sendMessage(database: any, currentUserId: string, message?: any, roomId
 
     database.from('chat_messages')
         .insert(payload)
-        .select('id').then(({data, error}: any) => {
+        .select('id').then(({
+                                data,
+                                error
+                            }: any) => {
         if (error) {
             router.refresh()
         }
+
         const [newMessage]: any = data
         if (!newMessage || !usersIds) return
         database.from('chat_message_read')
-            .insert(usersIds.filter(x => x !== currentUserId).map(user_id => ({
-                user_id,
-                message_id: newMessage.id,
-                room_id: roomId
-            })))
+            .insert(usersIds
+                .filter(x => x !== currentUserId).map(user_id => ({
+                    user_id,
+                    message_id: newMessage.id,
+                    room_id: roomId
+                }))).then(({error}: any) => {
+            if (error) {
+                router.refresh()
+            }
+        })
     })
 }
 
