@@ -6,32 +6,6 @@ import {ChatRoom} from "@/app/components/chat/chat-room-client";
 
 export const dynamic = 'force-dynamic'
 
-async function sendMessage(message?: string, roomId?: string, usersIds?: string[]) {
-    "use server"
-    if (!message || !roomId) return
-    const database = createServerComponentClient({cookies})
-    const {data: {user}} = await database.auth.getUser()
-    if (!user) return
-    const payload = {
-        message,
-        user_id: user.id,
-        room_id: roomId
-    }
-
-    const {data} = await database.from('chat_messages')
-        .insert(payload)
-        .select('id')
-
-    const [newMessage]: any = data
-    if (!newMessage || !usersIds) return
-    await database.from('chat_message_read')
-        .insert(usersIds.filter(x => x !== user.id).map(user_id => ({
-            user_id,
-            message_id: newMessage.id,
-            room_id: roomId
-        })))
-}
-
 async function updateReadAt(database: any, roomId: string, userId?: string) {
     if (!userId) return
     return database.from('chat_message_read')
@@ -93,27 +67,15 @@ export default async function Page({
     }
 
     return (
-        <form action={async (formData: FormData) => {
-            "use server"
-            const message = formData.get('message')?.toString()
-            try {
-                await sendMessage(message, params.room_id, usersIds)
-            } catch (e) {
-                console.error(e)
-                revalidatePath(`/chats/${params.room_id}`)
-            }
-        }} className="h-full">
-            <Section className="flex flex-col pb-[65px] md:pb-0">
-                <ChatRoom
-                    currentUserId={currentUserId}
-                    room={{
-                        members,
-                        messages,
-                        id: params.room_id
-                    }}
-                />
-            </Section>
-        </form>
-
+        <Section className="flex flex-col pb-[65px] md:pb-0">
+            <ChatRoom
+                currentUserId={currentUserId}
+                room={{
+                    members,
+                    messages,
+                    id: params.room_id
+                }}
+            />
+        </Section>
     )
 }

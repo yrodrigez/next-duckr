@@ -4,8 +4,9 @@ import {ChatMessages} from "@/app/components/chat/chat-messages-client";
 import {ChatMessageSend} from "@/app/components/chat/send-chat-message-client";
 import {experimental_useOptimistic as useOptimistic, useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
-import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
+import {createClientComponentClient, createServerComponentClient} from "@supabase/auth-helpers-nextjs";
 import {ChatMessageBubbleProps} from "@/app/components/chat/chat-message-bubble";
+import {cookies} from "next/headers";
 
 const updateOrInsertMessage = (messages: any, newMessage: any) => {
     const newMessages = [...messages];
@@ -28,6 +29,32 @@ function updateReadAt(database: any, roomId: string, userId: string) {
         .filter('room_id', 'eq', roomId)
 }
 
+function sendMessage(database: any, currentUserId: string, message?: any, roomId?: string, usersIds?: string[], router?: any) {
+    if (!message || !roomId) return
+    const payload = {
+        id: message.id,
+        message: message.message,
+        user_id: currentUserId,
+        room_id: roomId
+    }
+
+    database.from('chat_messages')
+        .insert(payload)
+        .select('id').then(({data, error}: any) => {
+        if (error) {
+            router.refresh()
+        }
+        const [newMessage]: any = data
+        if (!newMessage || !usersIds) return
+        database.from('chat_message_read')
+            .insert(usersIds.filter(x => x !== currentUserId).map(user_id => ({
+                user_id,
+                message_id: newMessage.id,
+                room_id: roomId
+            })))
+    })
+}
+
 export function ChatRoom({
                              room,
                              currentUserId
@@ -39,12 +66,6 @@ export function ChatRoom({
         id: roomId
     } = room
     const [messages, setMessages] = useState(initialMessages)
-    const [optimisticMessages, addOptimisticMessage] = useOptimistic<any, any>(messages, (currentMessages, newMessage) => {
-        if (!currentMessages || !newMessage) return currentMessages;
-
-        return [...currentMessages, newMessage]
-    })
-
     const database = createClientComponentClient()
     const [membersWithPresence, setMembersWithPresence] = useState<any[]>([])
     useEffect(() => {
@@ -97,12 +118,12 @@ export function ChatRoom({
                     return updateOrInsertMessage(prevMessages, newBubbleMessage)
                 })
             }).subscribe()
-
         return () => {
             database.removeChannel(messagesChannel)
         }
     }, [database, room.id, currentUserId])
 
+    const router = useRouter()
     return (
         <>
             <ChatRoomTitle
@@ -112,10 +133,16 @@ export function ChatRoom({
             />
             <ChatMessages
                 currentUserId={currentUserId}
-                messages={optimisticMessages}
+                messages={messages}
             />
             <ChatMessageSend
-                onMessageSend={addOptimisticMessage}
+                onMessageSend={(newMessage: any) => {
+                    setMessages((prevMessages: any) => {
+                        if (!prevMessages) return prevMessages
+                        return updateOrInsertMessage(prevMessages, newMessage)
+                    })
+                    sendMessage(database, currentUserId, newMessage, roomId, members?.map(({users: user}: any) => user.id), router)
+                }}
             />
         </>
     )
