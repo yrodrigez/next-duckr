@@ -41,14 +41,6 @@ const PinScrollToBottom = ({
     )
 }
 
-const PureContainer = ({children}: { children?: any }) => {
-    return (
-        <div className="w-full flex flex-col gap-3">
-            {children}
-        </div>
-    )
-}
-
 const GroupDate = ({date}: { date?: any }) => {
     const formatGroupDate = (date: any) => moment(date).format(moment(date).isSame(moment(), 'year') ? 'MMMM, DD' : 'DD, MMMM YYYY')
     return (
@@ -94,7 +86,7 @@ export function ChatMessages({
                                       messages
                                   }: any) => {
                 return (
-                    <PureContainer key={new Date(date).getTime()}>
+                    <div className="w-full flex flex-col gap-3" key={new Date(date).getTime()}>
                         <GroupDate date={date}/>
                         {
                             messages.sort((x: any, y: any) => {
@@ -105,6 +97,7 @@ export function ChatMessages({
                                         created_at
                                     }: any) => (
                                 <ChatMessageBubble
+                                    key={created_at}
                                     message={message}
                                     user={user}
                                     created_at={created_at}
@@ -113,7 +106,7 @@ export function ChatMessages({
                             ))
 
                         }
-                    </PureContainer>
+                    </div>
                 )
             })
             }

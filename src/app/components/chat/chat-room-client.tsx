@@ -39,11 +39,11 @@ export function ChatRoom({
         id: roomId
     } = room
     const [messages, setMessages] = useState(initialMessages)
-    const [optimisticMessages, addOptimisticMessage] = useOptimistic<any, any>(messages, (currentMessages, newMessage) => {
+    /*const [optimisticMessages, addOptimisticMessage] = useOptimistic<any, any>(messages, (currentMessages, newMessage) => {
         if (!currentMessages || !newMessage) return currentMessages;
 
         return updateOrInsertMessage(currentMessages, newMessage);
-    })
+    })*/
     const router = useRouter()
     const database = createClientComponentClient()
     const [membersWithPresence, setMembersWithPresence] = useState<any[]>([])
@@ -70,7 +70,6 @@ export function ChatRoom({
                     }
                 })
                 setMembersWithPresence(membersWithPresence)
-
             })
             .subscribe((payload: any) => {
                 roomStatus.track({user_id: currentUserId}, {event: 'join'})
@@ -88,6 +87,7 @@ export function ChatRoom({
                 table: 'chat_messages'
             }, ({new: newMessage}: any) => {
                 updateReadAt(database, room.id, currentUserId)
+                if (newMessage.user_id === currentUserId) return
                 setMessages((prevMessages: any) => {
                     const user = members?.find(({users: user}: any) => user.id === newMessage.user_id)?.users
                     const newBubbleMessage: ChatMessageBubbleProps = {
@@ -105,7 +105,7 @@ export function ChatRoom({
         return () => {
             database.removeChannel(messagesChannel)
         }
-    }, [database, optimisticMessages])
+    }, [database, room.id, currentUserId])
 
     return (
         <>
@@ -116,9 +116,11 @@ export function ChatRoom({
             />
             <ChatMessages
                 currentUserId={currentUserId}
-                messages={optimisticMessages}
+                messages={messages}
             />
-            <ChatMessageSend onMessageSend={addOptimisticMessage}/>
+            <ChatMessageSend
+                onMessageSend={(msg: any) => setMessages((prevMessages: any) => [...prevMessages, msg])}
+            />
         </>
     )
 }
