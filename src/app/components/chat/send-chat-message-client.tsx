@@ -1,7 +1,7 @@
 'use client'
 import {useContext, useEffect, useRef, useState} from "react";
 import {experimental_useFormStatus as useFormStatus} from "react-dom";
-import {IconLoader2, IconSend} from "@tabler/icons-react";
+import {IconSend} from "@tabler/icons-react";
 import {SessionContext} from "@/app/providers";
 
 export function ChatMessageSend({
@@ -11,7 +11,6 @@ export function ChatMessageSend({
     // @ts-ignore
     const {sessionContext} = useContext(SessionContext)
     const {user} = sessionContext
-
     const {pending} = useFormStatus()
     const alreadySent = useRef(false)
     const inputTextRef = useRef<HTMLInputElement>(null)
@@ -31,11 +30,10 @@ export function ChatMessageSend({
     }, [pending])
 
     return (
-        <div className="w-full flex gap-2 px-2 py-1">
+        <div className="w-full flex gap-2 px-2 py-1 bg-transparent">
             <input
                 onChange={e => setContent(e.target.value)}
                 ref={inputTextRef}
-                disabled={pending}
                 name="message"
                 autoComplete="off"
                 type="text"
@@ -47,6 +45,7 @@ export function ChatMessageSend({
                 type="submit"
                 onClick={
                     () => {
+                        if (!content) return
                         onMessageSend({
                             user,
                             message: content,
@@ -55,8 +54,8 @@ export function ChatMessageSend({
                         setContent('')
                         inputTextRef.current?.focus()
                     }}
-               >
-                {pending ? <IconLoader2 className="animate-spin w-6 h-6"/> : <IconSend className="w-6 h-6"/>}
+            >
+                <IconSend className="w-6 h-6 text-white"/>
             </button>
         </div>
     )

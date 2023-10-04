@@ -50,7 +50,7 @@ export function ChatRoomTitle({
               <IconChevronLeft/>
             </span>}
             <AvatarGroup max={3}>
-                {members.map((user: any) => <Avatar key={user?.id} src={user?.avatar_url}/>)}
+                {membersWithoutLoggedUser.map((user: any) => <Avatar isBordered={user.isOnline} color="success"  key={user?.id} src={user?.avatar_url}/>)}
             </AvatarGroup>
             <p className="h-fit ml-2 text-white">{roomName ? roomName : formatUserList(membersWithoutLoggedUser)}</p>
             {unreadCount > 0 && <span

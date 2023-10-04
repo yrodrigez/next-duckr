@@ -10,7 +10,6 @@ export default async function Home() {
     const database = createServerComponentClient<Database>({cookies})
     const {
         data: posts,
-        error
     } = await database.from('posts')
         .select('*, user:users(*), likes(*), replies:posts(id, content, created_at, user:users(*), likes(*))')
         .filter('post_id', 'is', null)

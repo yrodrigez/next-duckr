@@ -1,7 +1,6 @@
 import {createServerComponentClient} from "@supabase/auth-helpers-nextjs";
 import {cookies} from "next/headers";
 import {Section} from "@/app/components/section-server";
-
 import {revalidatePath} from "next/cache";
 import {ChatRoom} from "@/app/components/chat/chat-room-client";
 
@@ -33,7 +32,8 @@ async function sendMessage(message?: string, roomId?: string, usersIds?: string[
         })))
 }
 
-async function updateReadAt(database: any, roomId: string, userId: string) {
+async function updateReadAt(database: any, roomId: string, userId?: string) {
+    if (!userId) return
     return database.from('chat_message_read')
         .update({read_at: new Date()})
         .filter('user_id', 'eq', userId)
@@ -51,7 +51,8 @@ async function getRoomMessages(database: any, roomId: string) {
     const {data: messages} = await database.from('chat_messages')
         .select('id, message, created_at, user:users(avatar_url, name, user_name, id)')
         .filter('room_id', 'eq', roomId)
-        .order('created_at', {ascending: true})
+        .order('created_at', {ascending: false})
+        .range(0, 50)
 
     return messages
 }
@@ -63,13 +64,6 @@ export default async function Page({
     const database = createServerComponentClient({cookies})
     const {data: {session}} = await database.auth.getSession()
 
-    if (!session) {
-        return (
-            <Section className="overflow-hidden flex justify-center items-center">
-                Please login to view this page
-            </Section>
-        )
-    }
     const currentUserId = session?.user?.id
 
     const [members, messages] = await Promise.all([
@@ -77,6 +71,10 @@ export default async function Page({
         getRoomMessages(database, params.room_id),
         updateReadAt(database, params.room_id, currentUserId)
     ])
+
+    const usersIds = members.map(({users: user}: any) => {
+        return user.id
+    })
 
     if (!members) {
         return (
@@ -86,10 +84,13 @@ export default async function Page({
         )
     }
 
-    const usersIds = members.map(({users: user}: any) => {
-
-        return user.id
-    })
+    if (!session) {
+        return (
+            <Section className="overflow-hidden flex justify-center items-center">
+                Please login to view this page
+            </Section>
+        )
+    }
 
     return (
         <form action={async (formData: FormData) => {
@@ -107,7 +108,8 @@ export default async function Page({
                     currentUserId={currentUserId}
                     room={{
                         members,
-                        messages
+                        messages,
+                        id: params.room_id
                     }}
                 />
             </Section>

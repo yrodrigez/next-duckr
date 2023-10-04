@@ -2,7 +2,7 @@
 'use client'
 
 import {NextUIProvider} from '@nextui-org/react'
-import {createClientComponentClient, type Session} from '@supabase/auth-helpers-nextjs'
+import {type Session} from '@supabase/auth-helpers-nextjs'
 import {createContext, useState, useEffect} from 'react'
 import {redirect, usePathname} from "next/navigation";
 import {MessageReadEvent, useChatMessagesRead} from "@/app/components/chat/chat-messages-read-hook";
@@ -26,12 +26,17 @@ export function Providers({
     }
 
     (() => {
-        const resizeManager = () => {
+        const resizeManager = (window: any) => {
+            if (!window) return
             const h = window.innerHeight
             document.body.style.height = `${h}px`
         }
-        window.addEventListener('resize', resizeManager)
-        resizeManager()
+        try {
+            window.addEventListener('resize', () => resizeManager(window))
+            resizeManager(window)
+        } catch (e) {
+            return;
+        }
     })()
 
     return (
