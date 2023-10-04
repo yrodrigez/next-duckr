@@ -39,11 +39,11 @@ export function ChatRoom({
         id: roomId
     } = room
     const [messages, setMessages] = useState(initialMessages)
-    /*const [optimisticMessages, addOptimisticMessage] = useOptimistic<any, any>(messages, (currentMessages, newMessage) => {
+    const [optimisticMessages, addOptimisticMessage] = useOptimistic<any, any>(messages, (currentMessages, newMessage) => {
         if (!currentMessages || !newMessage) return currentMessages;
 
         return updateOrInsertMessage(currentMessages, newMessage);
-    })*/
+    })
     const router = useRouter()
     const database = createClientComponentClient()
     const [membersWithPresence, setMembersWithPresence] = useState<any[]>([])
@@ -61,7 +61,6 @@ export function ChatRoom({
             .on('presence', {event: 'sync'}, () => {
                 const currentStatus = roomStatus.presenceState()
                 const currentPresences = Object.keys(currentStatus)
-                console.log('currentStatus', currentStatus)
                 const membersWithPresence = members?.map(({users: user}: any) => {
                     const isOnline = currentPresences.includes(user.id)
                     return {
@@ -76,6 +75,7 @@ export function ChatRoom({
             })
         return () => {
             roomStatus.untrack()
+            database.removeChannel(roomStatus)
         }
     }, []);
 
@@ -87,7 +87,6 @@ export function ChatRoom({
                 table: 'chat_messages'
             }, ({new: newMessage}: any) => {
                 updateReadAt(database, room.id, currentUserId)
-                if (newMessage.user_id === currentUserId) return
                 setMessages((prevMessages: any) => {
                     const user = members?.find(({users: user}: any) => user.id === newMessage.user_id)?.users
                     const newBubbleMessage: ChatMessageBubbleProps = {
@@ -116,10 +115,10 @@ export function ChatRoom({
             />
             <ChatMessages
                 currentUserId={currentUserId}
-                messages={messages}
+                messages={optimisticMessages}
             />
             <ChatMessageSend
-                onMessageSend={(msg: any) => setMessages((prevMessages: any) => [...prevMessages, msg])}
+                onMessageSend={addOptimisticMessage}
             />
         </>
     )
