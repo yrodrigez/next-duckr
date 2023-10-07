@@ -19,25 +19,29 @@ export function Providers({
     const {user} = statedSession || {}
     const chatMessagesRead = useChatMessagesRead()
 
-    if (!user && pathName !== '/login') {
-        redirect('/login')
-    } else if (user && !user.user_metadata?.user_name && pathName !== '/login/update-user-name') {
-        redirect('/login/update-user-name')
+    const resizeManager = (window: any) => {
+        if (!window) return
+        const h = window.innerHeight
+        document.body.style.height = `${h}px`
     }
 
-    (() => {
-        const resizeManager = (window: any) => {
-            if (!window) return
-            const h = window.innerHeight
-            document.body.style.height = `${h}px`
+    useEffect(() => {
+
+        const willRedirect = pathName !== '/login' && pathName !== '/login/update-user-name' && pathName !== '/'
+
+        if (!user && pathName !== '/login') {
+            redirect(`/login${willRedirect && `?redirectedFrom=${encodeURIComponent(pathName)}`}`)
+            } else if (user && !user.user_metadata?.user_name && pathName !== '/login/update-user-name') {
+            redirect(`/login/update-user-name${willRedirect && `?redirected=true&redirectedFrom=${encodeURIComponent(pathName)}`}`)
         }
+
         try {
             window.addEventListener('resize', () => resizeManager(window))
             resizeManager(window)
         } catch (e) {
             return;
         }
-    })()
+    });
 
     return (
         <NextUIProvider>

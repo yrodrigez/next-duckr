@@ -1,7 +1,7 @@
 'use client'
 import {Session, createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {GithubIcon} from "./github-icon";
-import {useRouter} from 'next/navigation';
+import {redirect, useRouter} from 'next/navigation';
 import {AvatarClient} from "@/app/components/avatar-client";
 import {
     Popover,
@@ -10,8 +10,7 @@ import {
     useDisclosure,
     Button,
 } from "@nextui-org/react";
-import {className} from "postcss-selector-parser";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 type Provider =
     | 'apple'
@@ -34,7 +33,10 @@ type Provider =
     | 'workos'
     | 'zoom'
 
-export function LogOutButton({user, className}: {
+export function LogOutButton({
+                                 user,
+                                 className
+                             }: {
     user?: Session['user'],
     className?: string
 }) {
@@ -64,7 +66,6 @@ function UserOptions({user}: {
 
     const {
         isOpen,
-        onOpen,
         onOpenChange
     } = useDisclosure();
 
@@ -99,15 +100,17 @@ function UserOptions({user}: {
     )
 }
 
-export function AuthButtonClient({session}: any) {
+export function AuthButtonClient({
+                                     session,
+                                     redirectUrl
+                                 }: any) {
     const database = createClientComponentClient()
-    const router = useRouter()
     const handleSignIn = async (provider: Provider) => {
         try {
             return await database.auth.signInWithOAuth({
                 provider,
                 options: {
-                    redirectTo: `${location.origin}/auth/callback`
+                    redirectTo: `${location.origin}/auth/callback${redirectUrl && `?redirectedFrom=${redirectUrl}`}`
                 }
             })
         } catch (error) {
@@ -115,10 +118,11 @@ export function AuthButtonClient({session}: any) {
         }
     }
 
-    if (session && !session.user?.user_metadata?.user_name) {
-        router.push('/login/update-user-name')
-        return null
-    }
+    useEffect(() => {
+        if (session && !session.user?.user_metadata?.user_name) {
+            redirect(`/login/update-user-name${redirectUrl && `?redirectedFrom=${redirectUrl}`}`)
+        }
+    });
 
     return (
         session === null ?
