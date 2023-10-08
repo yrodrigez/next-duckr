@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect, useRef, useState, } from "react";
+import React, {useEffect, useRef, useState,} from "react";
 import moment from "moment";
 import {ChatMessageBubble} from "@/app/components/chat/chat-message-bubble";
 
@@ -19,11 +19,11 @@ const PinScrollToBottom = ({
         if (!current) return
 
         if (scrolledUp) return
-        setTimeout(()=> scroll(ref), 100)
+        setTimeout(() => scroll(ref), 100)
     })
 
     return (
-        <div className="flex flex-col justify-end h-full overflow-hidden">
+        <div className="flex flex-col justify-end h-full overflow-hidden mt-[56px]">
             <div
                 onScroll={(e) => {
                     const {
@@ -54,7 +54,7 @@ const GroupDate = ({date}: { date?: any }) => {
 
 const groupMessageByDate = (messages: any) => {
     const isSameDay = (date1: any, date2: any) => moment(date1).isSame(moment(date2), 'day')
-    return messages?.reduce((arr: any[], current: any) => {
+    return (messages || []).reduce((arr: any[], current: any) => {
         // groups the messages by day. return an object {messages, date}
         const last = arr.find((item: any) => isSameDay(item.date, current.created_at))
         if (!last) {
@@ -78,6 +78,7 @@ export function ChatMessages({
                              }: {
     messages?: any, currentUserId?: any
 }) {
+
     const groupedMessages = groupMessageByDate(messages)
     return (
         <PinScrollToBottom>
