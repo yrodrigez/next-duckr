@@ -10,6 +10,7 @@ import {IconHome2} from "@tabler/icons-react";
 
 import Link from "next/link";
 import {PanelChatsButton} from "@/app/components/chat/panel-chats-button-client";
+import {Section} from "@/app/components/section-server";
 
 export const dynamic = 'force-dynamic'
 
@@ -61,15 +62,17 @@ export default async function RootLayout({
                     </div>
                 </header>
                 <main className="flex flex-col items-center md:items-start justify-between grow h-full">
-                    {children}
-                    {
-                        session && (
-                            <div
-                                className="md:hidden align-middle max-w-[600px] w-screen h-[65px] fixed bottom-0 border-t border-l border-r border-white/30 flex justify-between items-center py-3 px-6 bg-black z-10">
-                                <UserPanel/>
-                            </div>
-                        )
-                    }
+                    <Section className="flex flex-col">
+                        {children}
+                        {
+                            session && (
+                                <div
+                                    className="md:hidden align-middle max-w-[600px] w-full h-[65px] bottom-0 border-t border-white/30 flex justify-between items-center py-3 px-6 bg-black">
+                                    <UserPanel/>
+                                </div>
+                            )
+                        }
+                    </Section>
                 </main>
             </div>
         </Providers>

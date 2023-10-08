@@ -45,7 +45,7 @@ export function CreatePost({
             'use server'
             return addPost(formData, postId)
         }}
-              className={`flex flex-1 flex-row p-3 ${noBorder ? '' : `border-b border-white/30`}`}>
+              className={`flex flex-row p-3 ${noBorder ? '' : `border-b border-white/30`}`}>
             <AvatarClient className="w-10 h-10 mr-2" radius="full" size="md" src={avatarUrl}/>
             <NewDuckTextArea placeholder={placeholder}/>
         </form>

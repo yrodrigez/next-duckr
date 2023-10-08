@@ -96,11 +96,10 @@ export default async function Page({
     }
 
     return (
-        <Section className="flex flex-col pb-[65px] md:pb-0">
-            <ChatRoom
-                currentUserId={currentUserId}
-                room={room}
-            />
-        </Section>
+
+        <ChatRoom
+            currentUserId={currentUserId}
+            room={room}
+        />
     )
 }

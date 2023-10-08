@@ -46,7 +46,7 @@ export function ChatRoomTitle({
 
     return (
         <div
-            className={`w-full h-14 border-r border-b border-white/30 flex ${withBackButton ? 'px-2' : 'px-6'} py-2 items-center hover:bg-white/10 transition-all`}>
+            className={`w-full h-14 border-b border-white/30 flex ${withBackButton ? 'px-2' : 'px-6'} py-2 items-center hover:bg-white/10 transition-all`}>
             {withBackButton && <span className="mr-2" onClick={(e) => {
                 e.preventDefault()
                 router.back()
@@ -54,7 +54,7 @@ export function ChatRoomTitle({
               <IconChevronLeft/>
             </span>}
             {membersWithoutCurrentUser.length > 1 ?
-                <AvatarGroup max={3}>
+                (<AvatarGroup max={3}>
                     {membersWithoutCurrentUser.sort((x: ChatMember, y: ChatMember) => (
                         x.isOnline ? 1 : -1
                     )).map((user: any) => (
@@ -65,11 +65,12 @@ export function ChatRoomTitle({
                             src={user?.avatar_url}
                         />
                     ))}
-                </AvatarGroup>
+                </AvatarGroup>)
                 :
-
-                <Avatar
-                    src={membersWithoutCurrentUser[0].avatar_url}/>
+                (
+                    <Avatar
+                        src={membersWithoutCurrentUser[0]?.avatar_url}/>
+                )
             }
             <p className="h-fit ml-2 text-white">{roomName ? roomName : formatUserList(membersWithoutCurrentUser)}</p>
             {withBackButton && membersWithoutCurrentUser.length === 1 && <div

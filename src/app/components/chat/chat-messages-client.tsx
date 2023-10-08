@@ -23,20 +23,18 @@ const PinScrollToBottom = ({
     })
 
     return (
-        <div className="flex flex-col justify-end h-full overflow-hidden mt-[56px]">
-            <div
-                onScroll={(e) => {
-                    const {
-                        scrollTop,
-                        scrollHeight,
-                        clientHeight
-                    } = e.target as HTMLDivElement
-                    setScrolledUp((scrollTop + clientHeight) < scrollHeight)
-                }}
-                ref={ref}
-                className={className || 'flex gap-3 p-5 overflow-auto scroll-smooth flex-col'}>
-                {children}
-            </div>
+        <div
+            onScroll={(e) => {
+                const {
+                    scrollTop,
+                    scrollHeight,
+                    clientHeight
+                } = e.target as HTMLDivElement
+                setScrolledUp((scrollTop + clientHeight) < scrollHeight)
+            }}
+            ref={ref}
+            className={className || 'flex gap-3 p-5 overflow-auto scroll-smooth flex-col h-full'}>
+            {children}
         </div>
     )
 }

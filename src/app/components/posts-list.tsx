@@ -44,15 +44,19 @@ export function PostsList({posts}: { posts: any }) {
         }
     }, [router, database, optimisticPosts])
 
-    return optimisticPosts?.map(post => {
-        return (
-            <PostCard
-                key={post.id}
-                post={post}
-                addOptimisticPost={addOptimisticPost}
-            />
+    return <div className="overflow-y-auto h-full w-full flex">
+        <div>
+            {optimisticPosts?.map(post => {
+                return (
+                    <PostCard
+                        key={post.id}
+                        post={post}
+                        addOptimisticPost={addOptimisticPost}
+                    />
 
-        )
-    })
+                )
+            })}
+        </div>
+    </div>
 
 }

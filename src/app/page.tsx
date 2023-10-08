@@ -19,9 +19,9 @@ export default async function Home() {
     if (!session) redirect('/login')
 
     return (
-        <section className="max-w-[600px] w-screen border-l border-r border-white/30 pb-[65px] md:pb-0">
+        <div className="max-w-[600px] w-full h-full flex flex-col overflow-auto">
             <CreatePost avatarUrl={session?.user?.user_metadata?.avatar_url}/>
             <PostsList posts={posts}/>
-        </section>
+        </div>
     )
 }

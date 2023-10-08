@@ -147,13 +147,11 @@ export function ChatRoom({
     const _roomName = roomName || membersWithPresence.find((user: ChatMember) => user.id !== currentUserId)?.name
     return (
         <>
-            <div className="fixed max-w-[600px] w-full z-10 bg-black">
-                <ChatRoomTitle
-                    members={membersWithPresence}
-                    roomName={_roomName}
-                    withBackButton
-                />
-            </div>
+            <ChatRoomTitle
+                members={membersWithPresence}
+                roomName={_roomName}
+                withBackButton
+            />
             <ChatMessages
                 currentUserId={currentUserId}
                 messages={messages}
