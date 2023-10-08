@@ -14,8 +14,13 @@ export type ChatMessageBubbleProps = {
     created_at: string
 }
 
-export function ChatMessageBubble({  currentUserId, user, message, created_at }: ChatMessageBubbleProps) {
-    const formattedDate = (date: any) => moment(date).format(moment().diff(moment(date), 'days') > 0 ? 'MMM DD, YYYY' : 'HH:MM')
+export function ChatMessageBubble({
+                                      currentUserId,
+                                      user,
+                                      message,
+                                      created_at
+                                  }: ChatMessageBubbleProps) {
+    const formattedDate = (date: any) => moment(date).format('HH:MM')
     const isCurrentUser = currentUserId === user?.id
     return (
         <div key={created_at}
