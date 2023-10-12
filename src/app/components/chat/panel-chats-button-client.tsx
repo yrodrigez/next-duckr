@@ -2,7 +2,9 @@
 import {IconMessages} from "@tabler/icons-react";
 import {type MessageReadEvent} from "@/app/components/chat/chat-messages-read-hook";
 import {useContext, useEffect, useState} from "react";
-import {SessionContext, ChatMessagesReadContext} from "@/app/providers";
+
+import {ChatMessagesReadContext} from "@/app/components/context-providers/chat-messages-read-context";
+import {SessionContext} from "@/app/components/context-providers/session-context";
 
 export function PanelChatsButton() {
     const {sessionContext: session}: any = useContext(SessionContext);

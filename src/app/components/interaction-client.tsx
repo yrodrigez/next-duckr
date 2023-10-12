@@ -7,7 +7,8 @@ import {type Post} from "@/app/types/posts";
 
 import {AvatarClient} from "@/app/components/avatar-client";
 import {FollowButton} from "@/app/components/follow-button-client";
-import {SessionContext} from "@/app/providers";
+import {SessionContext} from "@/app/components/context-providers/session-context";
+
 
 const Likes = ({post}: {
     post: Post

@@ -1,7 +1,9 @@
 'use client'
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {useContext, useEffect, useState} from "react";
-import {SessionContext} from "@/app/providers";
+import {type PostgrestSingleResponse} from "@supabase/supabase-js";
+import {usePathname} from "next/navigation";
+import {SessionContext} from "@/app/components/context-providers/session-context";
 
 export type MessageReadEvent = {
     id: string
@@ -18,23 +20,35 @@ export function useChatMessagesRead() {
     const {sessionContext: session}: any = useContext(SessionContext);
     const [unreadMessages, setUnreadMessages] = useState<MessageReadEvent[]>([]); // or appropriate initial state
     const [debouncedUnreadMessages, setDebouncedUnreadMessages] = useState<MessageReadEvent[]>([]);
+    const pathName = usePathname();
 
     useEffect(() => {
         const debounceTimer = setTimeout(() => {
-            setDebouncedUnreadMessages(unreadMessages);
+            // path name changed is not a chat room
+            if (!pathName.match(/\/chats\/[a-zA-Z0-9-]+/)) {
+                setDebouncedUnreadMessages(unreadMessages);
+            }
         }, 300);
 
         return () => {
             clearTimeout(debounceTimer);
         };
-    }, [unreadMessages]);
+    }, [pathName, unreadMessages]);
 
     useEffect(() => {
         database.from('chat_message_read')
             .select('*, message:chat_messages(*,room:chat_rooms(id))')
             .order('created_at', {ascending: false})
             .range(0, 300)
-            .then(({data}: any) => {
+            .then(({
+                       data,
+                       error
+                   }: PostgrestSingleResponse<MessageReadEvent[]>) => {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+
                 setUnreadMessages(data);
             });
     }, []);

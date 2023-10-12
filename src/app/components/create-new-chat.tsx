@@ -1,7 +1,7 @@
 'use client'
 import {IconMessagePlus, IconCheck, IconLoader2} from "@tabler/icons-react";
 import {useContext, useEffect, useState} from "react";
-import {SessionContext} from "@/app/providers";
+import {SessionContext} from "@/app/components/context-providers/session-context";
 import {Card, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {useRouter} from "next/navigation";
@@ -143,7 +143,9 @@ export function CreateNewChat() {
         <>
             <div
                 className="absolute bottom-[6rem] md:bottom-[4rem] right-4 z-10">
-                <button onClick={onOpen} className="rounded-full bg-sky-500 p-3"><IconMessagePlus size={30} color="white"/></button>
+                <button onClick={onOpen} className="rounded-full bg-sky-500 p-3"><IconMessagePlus size={30}
+                                                                                                  color="white"/>
+                </button>
             </div>
 
             <Modal

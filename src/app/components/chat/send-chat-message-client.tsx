@@ -1,10 +1,8 @@
 'use client'
 import {useContext, useEffect, useRef, useState} from "react";
 import {IconSend} from "@tabler/icons-react";
-import {SessionContext} from "@/app/providers";
+import {SessionContext} from "@/app/components/context-providers/session-context";
 import {v4 as uuid} from 'uuid';
-
-
 
 export function ChatMessageSend({
                                     onMessageSend,
@@ -12,7 +10,7 @@ export function ChatMessageSend({
 
     // @ts-ignore
     const {sessionContext} = useContext(SessionContext)
-    const {user} = sessionContext
+    const user = sessionContext?.user
     const inputTextRef = useRef<HTMLInputElement>(null)
     const [content, setContent] = useState('')
 

@@ -2,8 +2,7 @@
 import {type SupabaseClient, createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {IconHeart, IconHeartFilled} from "@tabler/icons-react";
 import {useContext, useState} from "react";
-import {type Post} from "@/app/types/posts";
-import {SessionContext} from "@/app/providers";
+import {SessionContext} from "@/app/components/context-providers/session-context";
 
 const tryToLike = ({
                        postId,
@@ -71,7 +70,7 @@ export function LikeButton({
                 userId,
                 database: database
             }).then((data) => {
-                const {error} =data
+                const {error} = data
                 if (error) return
                 const newPost = {
                     ...post,

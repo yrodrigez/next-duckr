@@ -5,7 +5,8 @@ import {useEffect} from "react";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {useRouter} from "next/navigation";
 import {useContext} from "react";
-import {ChatMessagesReadContext} from "@/app/providers";
+import {ChatMessagesReadContext} from "@/app/components/context-providers/chat-messages-read-context";
+
 
 export const RoomView = ({
                              room

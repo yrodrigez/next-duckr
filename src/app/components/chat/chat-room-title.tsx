@@ -1,10 +1,11 @@
 "use client"
 import {Avatar, AvatarGroup} from "@nextui-org/react";
-import {SessionContext} from "@/app/providers";
+
 import {useContext, useEffect, useState} from "react";
 import {IconChevronLeft} from "@tabler/icons-react";
 import {useRouter} from "next/navigation";
 import {ChatMember} from "@/app/chats/[room_id]/page";
+import {SessionContext} from "@/app/components/context-providers/session-context";
 
 function formatUserList(users: any[]) {
     let output = "You";

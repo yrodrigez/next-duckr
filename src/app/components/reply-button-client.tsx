@@ -7,7 +7,7 @@ import {DuckHeader} from "./post-card";
 import Link from "next/link";
 import {AvatarClient} from "./avatar-client";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
-import {SessionContext} from "@/app/providers";
+import {SessionContext} from "@/app/components/context-providers/session-context";
 
 export function Reply({
                           post,
