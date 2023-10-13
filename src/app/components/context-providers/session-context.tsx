@@ -27,7 +27,7 @@ export default function SessionContextProvider({ children }: SessionContextProvi
             const user = session?.user;
             setCurrentUser(user);
 
-            const willRedirect = ![ '/login', '/login/update-user-name', '/' ].includes(pathName);
+            const willRedirect = ![ '/login', '/login/update-user-name' ].includes(pathName);
             const redirectQuery = willRedirect ? `?redirectedFrom=${encodeURIComponent(pathName)}` : '';
 
             if (!user && pathName !== '/login') {
