@@ -15,7 +15,7 @@ export type MessageReadEvent = {
     received_at: string | null
 }
 
-export function useChatMessagesRead() {
+export function useChatMessagesRead(forceUpdate: boolean = false) {
     const database = createClientComponentClient();
     const {sessionContext: session}: any = useContext(SessionContext);
     const [unreadMessages, setUnreadMessages] = useState<MessageReadEvent[]>([]); // or appropriate initial state
@@ -25,7 +25,7 @@ export function useChatMessagesRead() {
     useEffect(() => {
         const debounceTimer = setTimeout(() => {
             // path name changed is not a chat room
-            if (!pathName.match(/\/chats\/[a-zA-Z0-9-]+/)) {
+            if (forceUpdate || !pathName.match(/\/chats\/[a-zA-Z0-9-]+/)) {
                 setDebouncedUnreadMessages(unreadMessages);
             }
         }, 300);

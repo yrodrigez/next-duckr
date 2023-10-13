@@ -1,14 +1,22 @@
 'use client'
 import {IconMessages} from "@tabler/icons-react";
-import {type MessageReadEvent} from "@/app/components/chat/chat-messages-read-hook";
+import {type MessageReadEvent, useChatMessagesRead} from "@/app/components/chat/chat-messages-read-hook";
 import {useContext, useEffect, useState} from "react";
 
 import {ChatMessagesReadContext} from "@/app/components/context-providers/chat-messages-read-context";
 import {SessionContext} from "@/app/components/context-providers/session-context";
+import {usePathname} from "next/navigation";
 
 export function PanelChatsButton() {
     const {sessionContext: session}: any = useContext(SessionContext);
-    const unreadMessages = useContext(ChatMessagesReadContext);
+
+    let unreadMessages = [] as MessageReadEvent[];
+    const pathname = usePathname()
+    if (!pathname.match(/\/chats\/[a-zA-Z0-9-]+/)) {
+        unreadMessages = useContext(ChatMessagesReadContext);
+    } else {
+        unreadMessages = useChatMessagesRead(true)
+    }
 
     const [hasUnreadMessages, setHasUnreadMessages] = useState<number>(0)
 

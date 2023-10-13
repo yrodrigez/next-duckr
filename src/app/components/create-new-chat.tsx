@@ -149,10 +149,7 @@ export function CreateNewChat() {
             </div>
 
             <Modal
-                onClick={e => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                }}
+
                 isOpen={isOpen}
                 disableAnimation
                 onOpenChange={onOpenChange}

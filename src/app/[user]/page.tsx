@@ -7,6 +7,8 @@ import React from "react";
 import {PostsList} from "@/app/components/posts-list";
 import {FollowButton} from "@/app/components/follow-button-client";
 import {TabView} from "@/app/components/tab-view-client";
+import {IconPhotoPlus} from "@tabler/icons-react";
+import {UserBanner} from "@/app/components/profile/user-banner";
 
 export const dynamic = 'force-dynamic'
 export default async function Page({
@@ -28,10 +30,8 @@ export default async function Page({
     const {data: {session}} = await database.auth.getSession()
 
     return (
-        <section className="border-l border-r border-white/30 max-w-[600px] w-screen h-fit">
-            <div className="h-[200px] bg-violet-600 w-[100%]">
-                {/*Change here to put user's banner*/}
-            </div>
+        <div className="h-full overflow-auto flex flex-col">
+            <UserBanner user={{id: user?.id}}/>
             <div className="px-6 pt-3 w-[100%] flex justify-between">
                 <div className="overflow-visible pb-2 -mt-[15%]">
                     <AvatarClient className="w-32 h-32" radius="full" size="md" src={user?.avatar_url}/>
@@ -59,10 +59,7 @@ export default async function Page({
                     {
                         label: 'Posts',
                         name: 'posts',
-                        children: (
-                                    <PostsList posts={posts}/>
-
-                        )
+                        children: <PostsList posts={posts}/>
                     },
                     {
                         label: 'Replies',
@@ -70,6 +67,6 @@ export default async function Page({
                         children: <PostsList posts={replies}/>
                     }
                 ]}/>
-        </section>
+        </div>
     )
 }

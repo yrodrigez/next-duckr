@@ -38,7 +38,7 @@ export function FollowButton({
     const [isDisabled, setIsDisabled] = useState(false)
     const database = createClientComponentClient()
     const [isFollowing, setIsFollowing] = useState(
-        follows.some((x: any) => x?.user_id === userToFollowId)
+        follows?.some((x: any) => x?.user_id === userToFollowId)
     )
     const follow = async (e: any) => {
         e.stopPropagation()
