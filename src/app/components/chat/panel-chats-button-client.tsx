@@ -5,18 +5,11 @@ import {useContext, useEffect, useState} from "react";
 
 import {ChatMessagesReadContext} from "@/app/components/context-providers/chat-messages-read-context";
 import {SessionContext} from "@/app/components/context-providers/session-context";
-import {usePathname} from "next/navigation";
 
 export function PanelChatsButton() {
     const {sessionContext: session}: any = useContext(SessionContext);
 
-    let unreadMessages = [] as MessageReadEvent[];
-    const pathname = usePathname()
-    if (!pathname.match(/\/chats\/[a-zA-Z0-9-]+/)) {
-        unreadMessages = useContext(ChatMessagesReadContext);
-    } else {
-        unreadMessages = useChatMessagesRead(true)
-    }
+    const unreadMessages = useContext(ChatMessagesReadContext)
 
     const [hasUnreadMessages, setHasUnreadMessages] = useState<number>(0)
 
