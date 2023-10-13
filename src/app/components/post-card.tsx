@@ -1,12 +1,9 @@
 'use client'
 import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/react";
-import {IconMessageCircle, IconRepeat, IconChartBar, IconShare} from '@tabler/icons-react';
 import moment from "moment";
 import {type Post} from "@/app/types/posts";
-import {LikeButton} from "./like-button-client";
 import {AvatarClient} from "./avatar-client";
 import Link from "next/link";
-import {Reply} from "./reply-button-client";
 import {useRouter} from "next/navigation";
 import {InteractionsActions} from "@/app/components/interactions-client";
 
@@ -23,7 +20,6 @@ export function DuckHeader({
         name: userFullName,
         user_name: userName,
         avatar_url: avatarUrl,
-
     } = user
     let typedAvatarUrl: string | undefined = avatarUrl as string | undefined
     const momentDate = moment(created_at)
@@ -32,7 +28,7 @@ export function DuckHeader({
         <>
             <CardHeader className="justify-between items-start flex flex-col">
                 <div className={`flex gap-${isReplying ? '1' : '3'}`}>
-                    <Link href={`/${userName}`} className="z-10">
+                    <Link onClick={(e) => e.stopPropagation()} href={`/${userName}`}>
                         <AvatarClient radius="full" size="md" src={typedAvatarUrl}/>
                     </Link>
                     <div
@@ -69,7 +65,7 @@ export function PostCard({
             router.push(`/${post.user.user_name || post.user.name?.split(' ')[0]}/status/${post.id}`)
         }}>
             <Card
-                className="cursor-pointer max-w-[600px] bg-transparent shadow-none border-b border-t border-white/20 hover:bg-slate-100/10 "
+                className="cursor-pointer max-w-[600px] bg-transparent shadow-none border-b border-t border-white/20 hover:bg-slate-100/10"
                 radius="none">
                 <DuckHeader post={post}/>
                 <CardFooter>
