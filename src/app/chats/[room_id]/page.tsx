@@ -1,29 +1,23 @@
 import {createServerComponentClient} from "@supabase/auth-helpers-nextjs";
 import {cookies} from "next/headers";
 import {Section} from "@/app/components/section-server";
-import {revalidatePath} from "next/cache";
 import {ChatRoom} from "@/app/components/chat/chat-room-client";
+import {redirect} from "next/navigation";
+import {updateReadAt} from "@/lib/chat/update-read-at";
 
 export const dynamic = 'force-dynamic'
 
-async function updateReadAt(database: any, roomId: string, userId?: string) {
-    if (!userId) throw new Error('User id is required')
-    return database.from('chat_message_read')
-        .update({read_at: new Date()})
-        .filter('user_id', 'eq', userId)
-        .filter('room_id', 'eq', roomId)
-}
 
 async function getRoomMembers(database: any, roomId: string) {
     const {data: members} = await database.from('chat_room_members')
-        .select('id, member_from:created_at, users(*), room: chat_rooms(*)')
+        .select('id, member_since:created_at, users(*), room: chat_rooms(*)')
         .filter('room_id', 'eq', roomId)
     return members
 }
 
 async function getRoomMessages(database: any, roomId: string) {
     const {data: messages} = await database.from('chat_messages')
-        .select('id, message, created_at, user:users(avatar_url, name, user_name, id)')
+        .select('id, message, created_at, user:users(avatar_url, name, user_name, id), statuses:chat_message_read(received_at, read_at, user_id, id)')
         .filter('room_id', 'eq', roomId)
         .order('created_at', {ascending: false})
         .range(0, 50)
@@ -36,6 +30,12 @@ export type ChatMessage = {
     message: string
     user: ChatMember
     created_at: string
+    statuses: [
+        received_at: string | null,
+        read_at: string | null,
+        user_id: string,
+        id: string
+    ]
 }
 
 export type ChatMember = {
@@ -64,18 +64,18 @@ export default async function Page({
     const {data: {session}} = await database.auth.getSession()
 
     const currentUserId = session?.user?.id
-
-    const [members, messages] = await Promise.all([
+    if (!currentUserId) {
+        redirect(`/login?redirectedFrom=${encodeURIComponent(`/chats/${params.room_id}`)}`)
+    }
+    await updateReadAt(database, params.room_id, currentUserId)
+    const [members] = await Promise.all([
         getRoomMembers(database, params.room_id),
-        getRoomMessages(database, params.room_id),
-        updateReadAt(database, params.room_id, currentUserId)
     ])
 
     const room: ChatRoom = {
         members: members.map(({users}: any) => ({
             ...users
         })),
-        messages,
         ...members?.[0]?.room
     }
 
@@ -96,7 +96,6 @@ export default async function Page({
     }
 
     return (
-
         <ChatRoom
             currentUserId={currentUserId}
             room={room}

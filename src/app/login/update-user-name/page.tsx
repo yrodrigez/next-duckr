@@ -44,7 +44,6 @@ export default async function UpdateUserNamePage() {
                 <SubmitUsernameChange/>
             </form>
             <LogOutButton
-                className="mt-5 px-3 py-2 bg-transparent w-full hover:bg-white/10 border border-white/30 rounded-full text-sm focus:outline-none focus:ring-4 focus:ring-white/20"
                 user={user}
             />
         </section>

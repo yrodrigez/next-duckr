@@ -1,16 +1,18 @@
 'use client'
-import {Session, createClientComponentClient} from "@supabase/auth-helpers-nextjs";
-import {GithubIcon} from "./github-icon";
-import {redirect, useRouter} from 'next/navigation';
-import {AvatarClient} from "@/app/components/avatar-client";
+import {Session, createClientComponentClient} from "@supabase/auth-helpers-nextjs"
+import {GithubIcon} from "./github-icon"
+import {redirect, useRouter} from 'next/navigation'
+import {AvatarClient} from "@/app/components/avatar-client"
 import {
     Popover,
     PopoverTrigger,
     PopoverContent,
     useDisclosure,
     Button,
-} from "@nextui-org/react";
-import {useEffect, useState} from "react";
+} from "@nextui-org/react"
+import React, {useEffect, useState} from "react"
+import Link from "next/link"
+import {IconUser, IconLogout} from "@tabler/icons-react"
 
 type Provider =
     | 'apple'
@@ -35,10 +37,9 @@ type Provider =
 
 export function LogOutButton({
                                  user,
-                                 className
                              }: {
     user?: Session['user'],
-    className?: string
+
 }) {
     const router = useRouter()
     const database = createClientComponentClient()
@@ -52,15 +53,16 @@ export function LogOutButton({
     }
 
     return (
-        <button
-            className={className || `pl-3 pr-3 bg-transparent w-full hover:bg-white/10`}
+        <Button
+            className="flex items-center gap-2 text-white"
             onClick={handleSignOut}>
-            Log out {`${userName ? `@${userName}` : ''}`}
-        </button>
+            <IconLogout/>
+            Log out
+        </Button>
     )
 }
 
-function UserOptions({user}: {
+export function UserOptions({user}: {
     user: Session['user']
 }) {
 
@@ -79,7 +81,8 @@ function UserOptions({user}: {
 
         >
             <PopoverTrigger>
-                <Button disableRipple isIconOnly className="hover:ring-white/20 hover:ring-8 bg-transparent">
+                <Button radius="full" disableRipple isIconOnly
+                        className="hover:ring-white/20 hover:ring-8 bg-transparent">
                     <AvatarClient
                         className="w-10 h-10"
                         radius="full"
@@ -90,11 +93,20 @@ function UserOptions({user}: {
             </PopoverTrigger>
             <PopoverContent>
                 {(triggerProps) => (
-                    <div className="flex flex-col p-3 w-full" {...triggerProps}>
+                    <div className="flex flex-col p-3 w-full gap-2" {...triggerProps}>
+                        <span className="text-xs text-gray-500">
+                            {user?.user_metadata?.user_name}
+                        </span>
+                        <Button>
+                            <Link href={`/${user?.user_metadata?.user_name}`}
+                                  className="flex items-center gap-2 text-white"
+                            >
+                                <IconUser/> Profile
+                            </Link>
+                        </Button>
                         <LogOutButton user={user}/>
                     </div>
                 )}
-
             </PopoverContent>
         </Popover>
     )
@@ -143,7 +155,6 @@ export function AuthButtonClient({
                     Sign in with Google
                 </button>
             </div>
-            : <UserOptions user={session.user}/>
-
+            : null
     )
 }

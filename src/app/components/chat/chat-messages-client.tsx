@@ -9,17 +9,20 @@ const PinScrollToBottom = ({
                            }: { className?: string, children?: any }) => {
     const ref = useRef<HTMLDivElement>(null)
     const [scrolledUp, setScrolledUp] = useState(false)
+    const [isScrolling, setIsScrolling] = useState(false)
 
     const scroll = (ref: React.RefObject<HTMLDivElement>) => {
+        setIsScrolling(true)
         ref.current?.scrollTo(0, ref.current?.scrollHeight)
+        setTimeout(() => setIsScrolling(false), 300)
     }
 
     useEffect(() => {
         const {current} = ref
         if (!current) return
 
-        if (scrolledUp) return
-        setTimeout(() => scroll(ref), 100)
+        if (scrolledUp && !isScrolling) return
+        scroll(ref)
     })
 
     return (
@@ -76,7 +79,6 @@ export function ChatMessages({
                              }: {
     messages?: any, currentUserId?: any
 }) {
-
     const groupedMessages = groupMessageByDate(messages)
     return (
         <PinScrollToBottom>
@@ -93,7 +95,8 @@ export function ChatMessages({
                             }).map(({
                                         user,
                                         message,
-                                        created_at
+                                        created_at,
+                                        statuses
                                     }: any) => (
                                 <ChatMessageBubble
                                     key={created_at}
@@ -101,6 +104,7 @@ export function ChatMessages({
                                     user={user}
                                     created_at={created_at}
                                     currentUserId={currentUserId}
+                                    statuses={statuses}
                                 />
                             ))
 

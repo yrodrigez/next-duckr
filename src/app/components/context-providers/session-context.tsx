@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { createClientComponentClient, Session } from "@supabase/auth-helpers-nextjs";
-import { redirect, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 type SessionContextProviderProps = {
     children: ReactNode;
@@ -19,6 +19,7 @@ export default function SessionContextProvider({ children }: SessionContextProvi
     const pathName = usePathname();
     const [statedSession, setStatedSession] = useState<Session | undefined >();
     const [currentUser, setCurrentUser] = useState<Session['user'] | undefined>(undefined);
+    const {push} = useRouter()
 
     useEffect(() => {
         const initSession = async () => {
@@ -31,9 +32,9 @@ export default function SessionContextProvider({ children }: SessionContextProvi
             const redirectQuery = willRedirect ? `?redirectedFrom=${encodeURIComponent(pathName)}` : '';
 
             if (!user && pathName !== '/login') {
-                redirect(`/login${redirectQuery}`);
+                push(`/login${redirectQuery}`);
             } else if (user && !user.user_metadata?.user_name && pathName !== '/login/update-user-name') {
-                redirect(`/login/update-user-name?redirected=true${redirectQuery}`);
+                push(`/login/update-user-name?redirected=true${redirectQuery}`);
             }
 
             setStatedSession(session);
