@@ -29,7 +29,7 @@ export function ChatMessageBubble({
                                       created_at,
                                       statuses
                                   }: ChatMessageBubbleProps) {
-    const formattedDate = (date: any) => moment(date).format('HH:MM')
+    const formattedDate = (date: string) => moment(date).format('HH:mm')
     const isCurrentUser = currentUserId === user?.id
     const MessageStatus = () => {
         const messageStatuses = statuses?.filter((x: ChatMessageStatus) => x?.user_id !== currentUserId)
