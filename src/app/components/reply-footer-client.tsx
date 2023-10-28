@@ -1,7 +1,7 @@
 'use client'
 import {type Post} from "@/app/types/posts";
 import {LikeButton} from "@/app/components/like-button-client";
-import {experimental_useOptimistic as useOptimistic} from "react";
+import {useOptimistic} from "react";
 import {InteractionsActions} from "@/app/components/interactions-client";
 
 export function ReplyFooterClient({post}: { post: Post }) {

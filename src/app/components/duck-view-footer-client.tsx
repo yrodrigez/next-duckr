@@ -2,7 +2,7 @@
 
 import {InteractionsActions} from "@/app/components/interactions-client";
 import {type Post} from "@/app/types/posts";
-import {experimental_useOptimistic as useOptimistic} from "react";
+import {useOptimistic} from "react";
 import {Interaction} from "@/app/components/interaction-client";
 
 const SectionContainer = ({children}: { children?: React.ReactNode }) => {

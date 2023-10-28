@@ -2,7 +2,7 @@
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs"
 import {PostCard} from "./post-card"
 import {type Post} from "@/app/types/posts"
-import {useEffect, experimental_useOptimistic as useOptimistic} from "react"
+import {useEffect, useOptimistic} from "react"
 import {useRouter} from "next/navigation";
 import Link from "next/link";
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from "react"
-import { experimental_useFormStatus as useFormStatus } from "react-dom"
+import { useFormStatus } from "react-dom"
 
 export function NewDuckTextArea({bgColor, placeholder, buttonText }: {bgColor?: string, placeholder?: string, buttonText?: string}) {
     const { pending } = useFormStatus()

@@ -1,6 +1,6 @@
 'use client'
 import {useEffect, useRef, useState} from "react";
-import {experimental_useFormStatus as useFormStatus} from "react-dom"
+import {useFormStatus} from "react-dom"
 import {useRouter} from "next/navigation";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 
