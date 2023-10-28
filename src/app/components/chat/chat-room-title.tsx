@@ -1,7 +1,7 @@
 "use client"
 import {Avatar, AvatarGroup} from "@nextui-org/react";
 
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import {IconChevronLeft} from "@tabler/icons-react";
 import {useRouter} from "next/navigation";
 import {ChatMember} from "@/app/chats/[room_id]/page";
@@ -44,6 +44,8 @@ export function ChatRoomTitle({
     const currentUser = sessionContext?.user
     const membersWithoutCurrentUser = members.filter(({id}: any) => id !== currentUser?.id)
     const router = useRouter()
+    roomName = roomName || membersWithoutCurrentUser.length === 1 ? membersWithoutCurrentUser[0].name : null
+    const formattedUserList = useMemo(() => formatUserList(membersWithoutCurrentUser), [membersWithoutCurrentUser])
 
     return (
         <div
@@ -73,7 +75,7 @@ export function ChatRoomTitle({
                         src={membersWithoutCurrentUser[0]?.avatar_url}/>
                 )
             }
-            <p className="h-fit ml-2 text-white">{roomName ? roomName : formatUserList(membersWithoutCurrentUser)}</p>
+            <p className="h-fit ml-2 text-white">{roomName || formattedUserList}</p>
             {withBackButton && membersWithoutCurrentUser.length === 1 && <div
               className={`w-3 h-3 ml-2 rounded-full ${membersWithoutCurrentUser[0].isOnline ? 'bg-green-500' : 'bg-gray-500'}`}/>
             }
