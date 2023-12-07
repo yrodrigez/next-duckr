@@ -5,7 +5,6 @@ import {Providers} from './providers'
 import {createServerComponentClient} from '@supabase/auth-helpers-nextjs'
 import {cookies} from 'next/headers'
 import {Database} from './types/database'
-import {AuthButtonServer} from "@/app/components/auth-button-server";
 import {IconHome2} from "@tabler/icons-react";
 
 import Link from "next/link";
@@ -53,7 +52,7 @@ export default async function RootLayout({
 
     return (
         <html lang="en" className="dark ">
-        <body className={`${inter.className} h-screen bg-black`} style={{}}>
+        <body className={`${inter.className} h-screen bg-black`} >
         <Providers>
             <div className="flex bg-black h-full">
                 <header className="z-3 justify-end items-end grow md:flex hidden">
