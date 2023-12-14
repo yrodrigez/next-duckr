@@ -18,7 +18,7 @@ export function TabView({tabs}: {
                     </button>
                 ))}
             </div>
-            <div className="overflow-auto">
+            <div key={activeTab.name} className="overflow-auto">
                 {activeTab.children || []}
             </div>
         </div>
